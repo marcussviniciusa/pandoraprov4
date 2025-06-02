@@ -20,6 +20,8 @@ function useForcedSession() {
     const [forcedSession, setForcedSession] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(null);
     const [isHydrated, setIsHydrated] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
     const [hasTriedForce, setHasTriedForce] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
+    // Ref para evitar logs repetitivos
+    const lastLoggedStatusRef = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useRef"])('');
     // Executa verificação forçada imediatamente no mount
     (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"])({
         "useForcedSession.useEffect": ()=>{
@@ -77,22 +79,27 @@ function useForcedSession() {
     // Determina estado final
     const finalSession = forcedSession || session;
     const finalStatus = finalSession && finalSession.user ? "authenticated" : isHydrated && hasTriedForce ? "unauthenticated" : "loading";
-    console.log('🎯 useForcedSession result:', {
-        useSessionStatus: status,
-        useSessionHasData: !!session,
-        forcedSessionHasData: !!forcedSession,
-        finalStatus,
-        isHydrated,
-        hasTriedForce,
-        finalHasUser: !!finalSession?.user
-    });
+    // Log apenas quando há mudança significativa
+    const currentStatusSignature = `${status}-${!!session}-${!!forcedSession}-${finalStatus}-${isHydrated}-${hasTriedForce}`;
+    if (lastLoggedStatusRef.current !== currentStatusSignature) {
+        console.log('🎯 useForcedSession state change:', {
+            useSessionStatus: status,
+            useSessionHasData: !!session,
+            forcedSessionHasData: !!forcedSession,
+            finalStatus,
+            isHydrated,
+            hasTriedForce,
+            finalHasUser: !!finalSession?.user
+        });
+        lastLoggedStatusRef.current = currentStatusSignature;
+    }
     return {
         data: finalSession,
         status: finalStatus,
         isHydrated
     };
 }
-_s(useForcedSession, "pcfvmCto2NRgUKReChQ4BpPkITE=", false, function() {
+_s(useForcedSession, "KZ8S7o2fSCq9K6W4X7ZuZrg2lzc=", false, function() {
     return [
         __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2d$auth$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useSession"]
     ];

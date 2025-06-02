@@ -18,7 +18,8 @@ import {
   CheckCircle, 
   XCircle, 
   RefreshCw,
-  Clock
+  Clock,
+  Wifi
 } from 'lucide-react'
 
 interface WhatsAppInstance {
@@ -64,6 +65,7 @@ export function QrCodeDialog({
   } | null>(null)
   const [isLoading, setIsLoading] = useState(false)
   const [isRefreshing, setIsRefreshing] = useState(false)
+  const [isCheckingStatus, setIsCheckingStatus] = useState(false)
   const { toast } = useToast()
   
   // Refs para controlar o polling
@@ -79,7 +81,7 @@ export function QrCodeDialog({
     }
   }
 
-  // Função para iniciar o polling
+  // Função para iniciar o polling (agora só chamada explicitamente)
   const startPolling = () => {
     clearPolling()
     
@@ -96,18 +98,66 @@ export function QrCodeDialog({
     }, 3000)
   }
 
-  // Effect para gerenciar o polling baseado no estado do dialog
+  // Função para verificar status atual na Evolution API
+  const checkConnectionStatus = async () => {
+    setIsCheckingStatus(true)
+    try {
+      const response = await fetch(`/api/whatsapp/instances/${instance.id}/status`)
+      
+      if (response.ok) {
+        const updatedInstance = await response.json()
+        console.log('🔍 Status verificado:', updatedInstance.status)
+        
+        if (updatedInstance.status === 'CONNECTED') {
+          isConnectedRef.current = true
+          clearPolling()
+          
+          setQrData({
+            qrCode: null,
+            status: 'CONNECTED',
+            phoneNumber: updatedInstance.phoneNumber
+          })
+          
+          if (!hasNotifiedRef.current) {
+            hasNotifiedRef.current = true
+            onStatusUpdate()
+            toast({
+              title: 'Conectado!',
+              description: `WhatsApp conectado com sucesso${updatedInstance.phoneNumber ? ': ' + updatedInstance.phoneNumber : ''}`,
+            })
+          }
+        } else {
+          setQrData(prev => prev ? {
+            ...prev,
+            status: updatedInstance.status,
+            phoneNumber: updatedInstance.phoneNumber
+          } : null)
+        }
+      }
+    } catch (error) {
+      console.error('Erro ao verificar status:', error)
+      toast({
+        title: 'Erro',
+        description: 'Erro ao verificar status da conexão',
+        variant: 'destructive'
+      })
+    } finally {
+      setIsCheckingStatus(false)
+    }
+  }
+
+  // Effect para buscar QR Code inicial e verificar status ao abrir
   useEffect(() => {
     if (open) {
       // Resetar estados quando abrir
       isConnectedRef.current = false
       hasNotifiedRef.current = false
       
-      // Buscar QR Code imediatamente
-      fetchQrCode()
+      // Verificar status atual primeiro
+      checkConnectionStatus()
       
-      // Iniciar polling após busca inicial
-      startPolling()
+      // Buscar QR Code apenas uma vez ao abrir
+      fetchQrCode()
     } else {
       // Limpar quando fechar
       clearPolling()
@@ -181,11 +231,12 @@ export function QrCodeDialog({
         hasNotifiedRef.current = false
         
         await fetchQrCode()
+        // Iniciar polling APENAS quando o usuário clica para atualizar QR Code
         startPolling()
         
         toast({
           title: 'QR Code atualizado',
-          description: 'Um novo QR Code foi gerado'
+          description: 'Um novo QR Code foi gerado e está sendo monitorado'
         })
       } else {
         const data = await response.json()
@@ -266,7 +317,22 @@ export function QrCodeDialog({
                 <DialogDescription>{instance.name}</DialogDescription>
               </div>
             </div>
-            {qrData?.status && getStatusBadge(qrData.status)}
+            <div className="flex items-center gap-2">
+              {qrData?.status && getStatusBadge(qrData.status)}
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={checkConnectionStatus}
+                disabled={isCheckingStatus}
+                title="Verificar status da conexão"
+              >
+                {isCheckingStatus ? (
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                ) : (
+                  <Wifi className="w-4 h-4" />
+                )}
+              </Button>
+            </div>
           </div>
         </DialogHeader>
 
@@ -321,19 +387,34 @@ export function QrCodeDialog({
                     4. Escaneie este QR Code
                   </p>
                 </div>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={refreshQrCode}
-                  disabled={isRefreshing}
-                >
-                  {isRefreshing ? (
-                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                  ) : (
-                    <RefreshCw className="w-4 h-4 mr-2" />
-                  )}
-                  Atualizar QR Code
-                </Button>
+                <div className="flex gap-2 justify-center">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={refreshQrCode}
+                    disabled={isRefreshing}
+                  >
+                    {isRefreshing ? (
+                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    ) : (
+                      <RefreshCw className="w-4 h-4 mr-2" />
+                    )}
+                    Atualizar QR Code
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={checkConnectionStatus}
+                    disabled={isCheckingStatus}
+                  >
+                    {isCheckingStatus ? (
+                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    ) : (
+                      <Wifi className="w-4 h-4 mr-2" />
+                    )}
+                    Verificar Status
+                  </Button>
+                </div>
               </div>
             ) : (
               <div className="flex flex-col items-center space-y-4">
@@ -344,23 +425,42 @@ export function QrCodeDialog({
                     Aguarde ou tente atualizar
                   </p>
                 </div>
-                <Button variant="outline" onClick={refreshQrCode} disabled={isRefreshing}>
-                  {isRefreshing ? (
-                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                  ) : (
-                    <RefreshCw className="w-4 h-4 mr-2" />
-                  )}
-                  Tentar Novamente
-                </Button>
+                <div className="flex gap-2 justify-center">
+                  <Button variant="outline" onClick={refreshQrCode} disabled={isRefreshing}>
+                    {isRefreshing ? (
+                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    ) : (
+                      <RefreshCw className="w-4 h-4 mr-2" />
+                    )}
+                    Tentar Novamente
+                  </Button>
+                  <Button variant="outline" onClick={checkConnectionStatus} disabled={isCheckingStatus}>
+                    {isCheckingStatus ? (
+                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    ) : (
+                      <Wifi className="w-4 h-4 mr-2" />
+                    )}
+                    Verificar Status
+                  </Button>
+                </div>
               </div>
             )}
           </div>
 
-          {/* Auto-refresh indicator */}
-          {qrData?.status === 'CONNECTING' && !isConnectedRef.current && (
+          {/* Auto-refresh indicator - Só mostra se o polling estiver ativo */}
+          {pollingIntervalRef.current && qrData?.status === 'CONNECTING' && !isConnectedRef.current && (
             <div className="text-center">
               <p className="text-xs text-muted-foreground">
-                ⟳ Atualizando automaticamente...
+                ⟳ Monitorando conexão automaticamente...
+              </p>
+            </div>
+          )}
+
+          {/* Dica para usuários que conectaram mas não aparece */}
+          {qrData?.status === 'CONNECTING' && (
+            <div className="text-center">
+              <p className="text-xs text-muted-foreground">
+                💡 Se você já conectou no celular, clique no botão "Verificar Status" para atualizar
               </p>
             </div>
           )}

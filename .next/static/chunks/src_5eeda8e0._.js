@@ -255,42 +255,6 @@ if (typeof globalThis.$RefreshHelpers$ === 'object' && globalThis.$RefreshHelper
     __turbopack_context__.k.registerExports(module, globalThis.$RefreshHelpers$);
 }
 }}),
-"[project]/src/components/ui/separator.tsx [app-client] (ecmascript)": ((__turbopack_context__) => {
-"use strict";
-
-var { g: global, __dirname, k: __turbopack_refresh__, m: module } = __turbopack_context__;
-{
-__turbopack_context__.s({
-    "Separator": (()=>Separator)
-});
-var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/compiled/react/jsx-dev-runtime.js [app-client] (ecmascript)");
-var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$radix$2d$ui$2f$react$2d$separator$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/@radix-ui/react-separator/dist/index.mjs [app-client] (ecmascript)");
-var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/lib/utils.ts [app-client] (ecmascript)");
-"use client";
-;
-;
-;
-function Separator({ className, orientation = "horizontal", decorative = true, ...props }) {
-    return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$radix$2d$ui$2f$react$2d$separator$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Root"], {
-        "data-slot": "separator",
-        decorative: decorative,
-        orientation: orientation,
-        className: (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["cn"])("bg-border shrink-0 data-[orientation=horizontal]:h-px data-[orientation=horizontal]:w-full data-[orientation=vertical]:h-full data-[orientation=vertical]:w-px", className),
-        ...props
-    }, void 0, false, {
-        fileName: "[project]/src/components/ui/separator.tsx",
-        lineNumber: 15,
-        columnNumber: 5
-    }, this);
-}
-_c = Separator;
-;
-var _c;
-__turbopack_context__.k.register(_c, "Separator");
-if (typeof globalThis.$RefreshHelpers$ === 'object' && globalThis.$RefreshHelpers !== null) {
-    __turbopack_context__.k.registerExports(module, globalThis.$RefreshHelpers$);
-}
-}}),
 "[project]/src/hooks/use-toast.ts [app-client] (ecmascript)": ((__turbopack_context__) => {
 "use strict";
 
@@ -1601,6 +1565,7 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$re
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$circle$2d$x$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__XCircle$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/circle-x.js [app-client] (ecmascript) <export default as XCircle>");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$refresh$2d$cw$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__RefreshCw$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/refresh-cw.js [app-client] (ecmascript) <export default as RefreshCw>");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$clock$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Clock$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/clock.js [app-client] (ecmascript) <export default as Clock>");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$wifi$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Wifi$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/wifi.js [app-client] (ecmascript) <export default as Wifi>");
 ;
 var _s = __turbopack_context__.k.signature();
 'use client';
@@ -1615,6 +1580,7 @@ function QrCodeDialog({ instance, open, onOpenChange, onStatusUpdate }) {
     const [qrData, setQrData] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(null);
     const [isLoading, setIsLoading] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
     const [isRefreshing, setIsRefreshing] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
+    const [isCheckingStatus, setIsCheckingStatus] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
     const { toast } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$hooks$2f$use$2d$toast$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useToast"])();
     // Refs para controlar o polling
     const pollingIntervalRef = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useRef"])(null);
@@ -1641,13 +1607,58 @@ function QrCodeDialog({ instance, open, onOpenChange, onStatusUpdate }) {
             }
         }, 3000);
     };
-    // Effect para buscar QR Code inicial e limpar ao fechar (SEM polling automático)
+    // Função para verificar status atual na Evolution API
+    const checkConnectionStatus = async ()=>{
+        setIsCheckingStatus(true);
+        try {
+            const response = await fetch(`/api/whatsapp/instances/${instance.id}/status`);
+            if (response.ok) {
+                const updatedInstance = await response.json();
+                console.log('🔍 Status verificado:', updatedInstance.status);
+                if (updatedInstance.status === 'CONNECTED') {
+                    isConnectedRef.current = true;
+                    clearPolling();
+                    setQrData({
+                        qrCode: null,
+                        status: 'CONNECTED',
+                        phoneNumber: updatedInstance.phoneNumber
+                    });
+                    if (!hasNotifiedRef.current) {
+                        hasNotifiedRef.current = true;
+                        onStatusUpdate();
+                        toast({
+                            title: 'Conectado!',
+                            description: `WhatsApp conectado com sucesso${updatedInstance.phoneNumber ? ': ' + updatedInstance.phoneNumber : ''}`
+                        });
+                    }
+                } else {
+                    setQrData((prev)=>prev ? {
+                            ...prev,
+                            status: updatedInstance.status,
+                            phoneNumber: updatedInstance.phoneNumber
+                        } : null);
+                }
+            }
+        } catch (error) {
+            console.error('Erro ao verificar status:', error);
+            toast({
+                title: 'Erro',
+                description: 'Erro ao verificar status da conexão',
+                variant: 'destructive'
+            });
+        } finally{
+            setIsCheckingStatus(false);
+        }
+    };
+    // Effect para buscar QR Code inicial e verificar status ao abrir
     (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"])({
         "QrCodeDialog.useEffect": ()=>{
             if (open) {
                 // Resetar estados quando abrir
                 isConnectedRef.current = false;
                 hasNotifiedRef.current = false;
+                // Verificar status atual primeiro
+                checkConnectionStatus();
                 // Buscar QR Code apenas uma vez ao abrir
                 fetchQrCode();
             } else {
@@ -1754,14 +1765,14 @@ function QrCodeDialog({ instance, open, onOpenChange, onStatusUpdate }) {
                             className: "w-3 h-3 mr-1"
                         }, void 0, false, {
                             fileName: "[project]/src/app/admin/whatsapp/components/QrCodeDialog.tsx",
-                            lineNumber: 212,
+                            lineNumber: 265,
                             columnNumber: 13
                         }, this),
                         "Conectado"
                     ]
                 }, void 0, true, {
                     fileName: "[project]/src/app/admin/whatsapp/components/QrCodeDialog.tsx",
-                    lineNumber: 211,
+                    lineNumber: 264,
                     columnNumber: 11
                 }, this);
             case 'CONNECTING':
@@ -1773,14 +1784,14 @@ function QrCodeDialog({ instance, open, onOpenChange, onStatusUpdate }) {
                             className: "w-3 h-3 mr-1"
                         }, void 0, false, {
                             fileName: "[project]/src/app/admin/whatsapp/components/QrCodeDialog.tsx",
-                            lineNumber: 219,
+                            lineNumber: 272,
                             columnNumber: 13
                         }, this),
                         "Conectando"
                     ]
                 }, void 0, true, {
                     fileName: "[project]/src/app/admin/whatsapp/components/QrCodeDialog.tsx",
-                    lineNumber: 218,
+                    lineNumber: 271,
                     columnNumber: 11
                 }, this);
             case 'DISCONNECTED':
@@ -1791,14 +1802,14 @@ function QrCodeDialog({ instance, open, onOpenChange, onStatusUpdate }) {
                             className: "w-3 h-3 mr-1"
                         }, void 0, false, {
                             fileName: "[project]/src/app/admin/whatsapp/components/QrCodeDialog.tsx",
-                            lineNumber: 226,
+                            lineNumber: 279,
                             columnNumber: 13
                         }, this),
                         "Desconectado"
                     ]
                 }, void 0, true, {
                     fileName: "[project]/src/app/admin/whatsapp/components/QrCodeDialog.tsx",
-                    lineNumber: 225,
+                    lineNumber: 278,
                     columnNumber: 11
                 }, this);
             case 'ERROR':
@@ -1809,14 +1820,14 @@ function QrCodeDialog({ instance, open, onOpenChange, onStatusUpdate }) {
                             className: "w-3 h-3 mr-1"
                         }, void 0, false, {
                             fileName: "[project]/src/app/admin/whatsapp/components/QrCodeDialog.tsx",
-                            lineNumber: 233,
+                            lineNumber: 286,
                             columnNumber: 13
                         }, this),
                         "Erro"
                     ]
                 }, void 0, true, {
                     fileName: "[project]/src/app/admin/whatsapp/components/QrCodeDialog.tsx",
-                    lineNumber: 232,
+                    lineNumber: 285,
                     columnNumber: 11
                 }, this);
             default:
@@ -1827,14 +1838,14 @@ function QrCodeDialog({ instance, open, onOpenChange, onStatusUpdate }) {
                             className: "w-3 h-3 mr-1"
                         }, void 0, false, {
                             fileName: "[project]/src/app/admin/whatsapp/components/QrCodeDialog.tsx",
-                            lineNumber: 240,
+                            lineNumber: 293,
                             columnNumber: 13
                         }, this),
                         "Carregando"
                     ]
                 }, void 0, true, {
                     fileName: "[project]/src/app/admin/whatsapp/components/QrCodeDialog.tsx",
-                    lineNumber: 239,
+                    lineNumber: 292,
                     columnNumber: 11
                 }, this);
         }
@@ -1863,12 +1874,12 @@ function QrCodeDialog({ instance, open, onOpenChange, onStatusUpdate }) {
                                             className: "w-5 h-5 text-green-600"
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/admin/whatsapp/components/QrCodeDialog.tsx",
-                                            lineNumber: 260,
+                                            lineNumber: 313,
                                             columnNumber: 17
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/admin/whatsapp/components/QrCodeDialog.tsx",
-                                        lineNumber: 259,
+                                        lineNumber: 312,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1877,38 +1888,71 @@ function QrCodeDialog({ instance, open, onOpenChange, onStatusUpdate }) {
                                                 children: "Conectar WhatsApp"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/admin/whatsapp/components/QrCodeDialog.tsx",
-                                                lineNumber: 263,
+                                                lineNumber: 316,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$dialog$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["DialogDescription"], {
                                                 children: instance.name
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/admin/whatsapp/components/QrCodeDialog.tsx",
-                                                lineNumber: 264,
+                                                lineNumber: 317,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/app/admin/whatsapp/components/QrCodeDialog.tsx",
-                                        lineNumber: 262,
+                                        lineNumber: 315,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/app/admin/whatsapp/components/QrCodeDialog.tsx",
-                                lineNumber: 258,
+                                lineNumber: 311,
                                 columnNumber: 13
                             }, this),
-                            qrData?.status && getStatusBadge(qrData.status)
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                className: "flex items-center gap-2",
+                                children: [
+                                    qrData?.status && getStatusBadge(qrData.status),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
+                                        variant: "ghost",
+                                        size: "sm",
+                                        onClick: checkConnectionStatus,
+                                        disabled: isCheckingStatus,
+                                        title: "Verificar status da conexão",
+                                        children: isCheckingStatus ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$loader$2d$circle$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Loader2$3e$__["Loader2"], {
+                                            className: "w-4 h-4 animate-spin"
+                                        }, void 0, false, {
+                                            fileName: "[project]/src/app/admin/whatsapp/components/QrCodeDialog.tsx",
+                                            lineNumber: 330,
+                                            columnNumber: 19
+                                        }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$wifi$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Wifi$3e$__["Wifi"], {
+                                            className: "w-4 h-4"
+                                        }, void 0, false, {
+                                            fileName: "[project]/src/app/admin/whatsapp/components/QrCodeDialog.tsx",
+                                            lineNumber: 332,
+                                            columnNumber: 19
+                                        }, this)
+                                    }, void 0, false, {
+                                        fileName: "[project]/src/app/admin/whatsapp/components/QrCodeDialog.tsx",
+                                        lineNumber: 322,
+                                        columnNumber: 15
+                                    }, this)
+                                ]
+                            }, void 0, true, {
+                                fileName: "[project]/src/app/admin/whatsapp/components/QrCodeDialog.tsx",
+                                lineNumber: 320,
+                                columnNumber: 13
+                            }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/app/admin/whatsapp/components/QrCodeDialog.tsx",
-                        lineNumber: 257,
+                        lineNumber: 310,
                         columnNumber: 11
                     }, this)
                 }, void 0, false, {
                     fileName: "[project]/src/app/admin/whatsapp/components/QrCodeDialog.tsx",
-                    lineNumber: 256,
+                    lineNumber: 309,
                     columnNumber: 9
                 }, this),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1923,7 +1967,7 @@ function QrCodeDialog({ instance, open, onOpenChange, onStatusUpdate }) {
                                         className: "w-5 h-5 text-green-600"
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/admin/whatsapp/components/QrCodeDialog.tsx",
-                                        lineNumber: 276,
+                                        lineNumber: 344,
                                         columnNumber: 17
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1933,7 +1977,7 @@ function QrCodeDialog({ instance, open, onOpenChange, onStatusUpdate }) {
                                                 children: "WhatsApp Conectado!"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/admin/whatsapp/components/QrCodeDialog.tsx",
-                                                lineNumber: 278,
+                                                lineNumber: 346,
                                                 columnNumber: 19
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1944,24 +1988,24 @@ function QrCodeDialog({ instance, open, onOpenChange, onStatusUpdate }) {
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/app/admin/whatsapp/components/QrCodeDialog.tsx",
-                                                lineNumber: 279,
+                                                lineNumber: 347,
                                                 columnNumber: 19
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/app/admin/whatsapp/components/QrCodeDialog.tsx",
-                                        lineNumber: 277,
+                                        lineNumber: 345,
                                         columnNumber: 17
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/app/admin/whatsapp/components/QrCodeDialog.tsx",
-                                lineNumber: 275,
+                                lineNumber: 343,
                                 columnNumber: 15
                             }, this)
                         }, void 0, false, {
                             fileName: "[project]/src/app/admin/whatsapp/components/QrCodeDialog.tsx",
-                            lineNumber: 274,
+                            lineNumber: 342,
                             columnNumber: 13
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1973,7 +2017,7 @@ function QrCodeDialog({ instance, open, onOpenChange, onStatusUpdate }) {
                                         className: "w-8 h-8 animate-spin text-muted-foreground"
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/admin/whatsapp/components/QrCodeDialog.tsx",
-                                        lineNumber: 289,
+                                        lineNumber: 357,
                                         columnNumber: 17
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1981,13 +2025,13 @@ function QrCodeDialog({ instance, open, onOpenChange, onStatusUpdate }) {
                                         children: "Carregando QR Code..."
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/admin/whatsapp/components/QrCodeDialog.tsx",
-                                        lineNumber: 290,
+                                        lineNumber: 358,
                                         columnNumber: 17
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/app/admin/whatsapp/components/QrCodeDialog.tsx",
-                                lineNumber: 288,
+                                lineNumber: 356,
                                 columnNumber: 15
                             }, this) : qrData?.status === 'CONNECTED' ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                 className: "flex flex-col items-center space-y-4",
@@ -1998,12 +2042,12 @@ function QrCodeDialog({ instance, open, onOpenChange, onStatusUpdate }) {
                                             className: "w-16 h-16 text-green-600"
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/admin/whatsapp/components/QrCodeDialog.tsx",
-                                            lineNumber: 295,
+                                            lineNumber: 363,
                                             columnNumber: 19
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/admin/whatsapp/components/QrCodeDialog.tsx",
-                                        lineNumber: 294,
+                                        lineNumber: 362,
                                         columnNumber: 17
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2013,7 +2057,7 @@ function QrCodeDialog({ instance, open, onOpenChange, onStatusUpdate }) {
                                                 children: "Conectado com sucesso!"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/admin/whatsapp/components/QrCodeDialog.tsx",
-                                                lineNumber: 298,
+                                                lineNumber: 366,
                                                 columnNumber: 19
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -2021,19 +2065,19 @@ function QrCodeDialog({ instance, open, onOpenChange, onStatusUpdate }) {
                                                 children: "Seu WhatsApp está pronto para uso"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/admin/whatsapp/components/QrCodeDialog.tsx",
-                                                lineNumber: 299,
+                                                lineNumber: 367,
                                                 columnNumber: 19
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/app/admin/whatsapp/components/QrCodeDialog.tsx",
-                                        lineNumber: 297,
+                                        lineNumber: 365,
                                         columnNumber: 17
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/app/admin/whatsapp/components/QrCodeDialog.tsx",
-                                lineNumber: 293,
+                                lineNumber: 361,
                                 columnNumber: 15
                             }, this) : qrData?.qrCode ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                 className: "space-y-4",
@@ -2046,12 +2090,12 @@ function QrCodeDialog({ instance, open, onOpenChange, onStatusUpdate }) {
                                             className: "w-64 h-64 border rounded-lg"
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/admin/whatsapp/components/QrCodeDialog.tsx",
-                                            lineNumber: 307,
+                                            lineNumber: 375,
                                             columnNumber: 19
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/admin/whatsapp/components/QrCodeDialog.tsx",
-                                        lineNumber: 306,
+                                        lineNumber: 374,
                                         columnNumber: 17
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2062,7 +2106,7 @@ function QrCodeDialog({ instance, open, onOpenChange, onStatusUpdate }) {
                                                 children: "Escaneie o QR Code"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/admin/whatsapp/components/QrCodeDialog.tsx",
-                                                lineNumber: 314,
+                                                lineNumber: 382,
                                                 columnNumber: 19
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -2071,7 +2115,7 @@ function QrCodeDialog({ instance, open, onOpenChange, onStatusUpdate }) {
                                                     "1. Abra o WhatsApp no seu celular",
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("br", {}, void 0, false, {
                                                         fileName: "[project]/src/app/admin/whatsapp/components/QrCodeDialog.tsx",
-                                                        lineNumber: 316,
+                                                        lineNumber: 384,
                                                         columnNumber: 54
                                                     }, this),
                                                     "2. Toque em Configurações ",
@@ -2079,58 +2123,93 @@ function QrCodeDialog({ instance, open, onOpenChange, onStatusUpdate }) {
                                                     " Aparelhos conectados",
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("br", {}, void 0, false, {
                                                         fileName: "[project]/src/app/admin/whatsapp/components/QrCodeDialog.tsx",
-                                                        lineNumber: 317,
+                                                        lineNumber: 385,
                                                         columnNumber: 73
                                                     }, this),
                                                     '3. Toque em "Conectar um aparelho"',
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("br", {}, void 0, false, {
                                                         fileName: "[project]/src/app/admin/whatsapp/components/QrCodeDialog.tsx",
-                                                        lineNumber: 318,
+                                                        lineNumber: 386,
                                                         columnNumber: 55
                                                     }, this),
                                                     "4. Escaneie este QR Code"
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/app/admin/whatsapp/components/QrCodeDialog.tsx",
-                                                lineNumber: 315,
+                                                lineNumber: 383,
                                                 columnNumber: 19
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/app/admin/whatsapp/components/QrCodeDialog.tsx",
-                                        lineNumber: 313,
+                                        lineNumber: 381,
                                         columnNumber: 17
                                     }, this),
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
-                                        variant: "outline",
-                                        size: "sm",
-                                        onClick: refreshQrCode,
-                                        disabled: isRefreshing,
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        className: "flex gap-2 justify-center",
                                         children: [
-                                            isRefreshing ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$loader$2d$circle$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Loader2$3e$__["Loader2"], {
-                                                className: "w-4 h-4 mr-2 animate-spin"
-                                            }, void 0, false, {
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
+                                                variant: "outline",
+                                                size: "sm",
+                                                onClick: refreshQrCode,
+                                                disabled: isRefreshing,
+                                                children: [
+                                                    isRefreshing ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$loader$2d$circle$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Loader2$3e$__["Loader2"], {
+                                                        className: "w-4 h-4 mr-2 animate-spin"
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/src/app/admin/whatsapp/components/QrCodeDialog.tsx",
+                                                        lineNumber: 398,
+                                                        columnNumber: 23
+                                                    }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$refresh$2d$cw$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__RefreshCw$3e$__["RefreshCw"], {
+                                                        className: "w-4 h-4 mr-2"
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/src/app/admin/whatsapp/components/QrCodeDialog.tsx",
+                                                        lineNumber: 400,
+                                                        columnNumber: 23
+                                                    }, this),
+                                                    "Atualizar QR Code"
+                                                ]
+                                            }, void 0, true, {
                                                 fileName: "[project]/src/app/admin/whatsapp/components/QrCodeDialog.tsx",
-                                                lineNumber: 329,
-                                                columnNumber: 21
-                                            }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$refresh$2d$cw$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__RefreshCw$3e$__["RefreshCw"], {
-                                                className: "w-4 h-4 mr-2"
-                                            }, void 0, false, {
-                                                fileName: "[project]/src/app/admin/whatsapp/components/QrCodeDialog.tsx",
-                                                lineNumber: 331,
-                                                columnNumber: 21
+                                                lineNumber: 391,
+                                                columnNumber: 19
                                             }, this),
-                                            "Atualizar QR Code"
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
+                                                variant: "outline",
+                                                size: "sm",
+                                                onClick: checkConnectionStatus,
+                                                disabled: isCheckingStatus,
+                                                children: [
+                                                    isCheckingStatus ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$loader$2d$circle$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Loader2$3e$__["Loader2"], {
+                                                        className: "w-4 h-4 mr-2 animate-spin"
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/src/app/admin/whatsapp/components/QrCodeDialog.tsx",
+                                                        lineNumber: 411,
+                                                        columnNumber: 23
+                                                    }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$wifi$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Wifi$3e$__["Wifi"], {
+                                                        className: "w-4 h-4 mr-2"
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/src/app/admin/whatsapp/components/QrCodeDialog.tsx",
+                                                        lineNumber: 413,
+                                                        columnNumber: 23
+                                                    }, this),
+                                                    "Verificar Status"
+                                                ]
+                                            }, void 0, true, {
+                                                fileName: "[project]/src/app/admin/whatsapp/components/QrCodeDialog.tsx",
+                                                lineNumber: 404,
+                                                columnNumber: 19
+                                            }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/app/admin/whatsapp/components/QrCodeDialog.tsx",
-                                        lineNumber: 322,
+                                        lineNumber: 390,
                                         columnNumber: 17
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/app/admin/whatsapp/components/QrCodeDialog.tsx",
-                                lineNumber: 305,
+                                lineNumber: 373,
                                 columnNumber: 15
                             }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                 className: "flex flex-col items-center space-y-4",
@@ -2139,7 +2218,7 @@ function QrCodeDialog({ instance, open, onOpenChange, onStatusUpdate }) {
                                         className: "w-16 h-16 text-muted-foreground"
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/admin/whatsapp/components/QrCodeDialog.tsx",
-                                        lineNumber: 338,
+                                        lineNumber: 421,
                                         columnNumber: 17
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2149,7 +2228,7 @@ function QrCodeDialog({ instance, open, onOpenChange, onStatusUpdate }) {
                                                 children: "QR Code não disponível"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/admin/whatsapp/components/QrCodeDialog.tsx",
-                                                lineNumber: 340,
+                                                lineNumber: 423,
                                                 columnNumber: 19
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -2157,49 +2236,83 @@ function QrCodeDialog({ instance, open, onOpenChange, onStatusUpdate }) {
                                                 children: "Aguarde ou tente atualizar"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/admin/whatsapp/components/QrCodeDialog.tsx",
-                                                lineNumber: 341,
+                                                lineNumber: 424,
                                                 columnNumber: 19
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/app/admin/whatsapp/components/QrCodeDialog.tsx",
-                                        lineNumber: 339,
+                                        lineNumber: 422,
                                         columnNumber: 17
                                     }, this),
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
-                                        variant: "outline",
-                                        onClick: refreshQrCode,
-                                        disabled: isRefreshing,
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        className: "flex gap-2 justify-center",
                                         children: [
-                                            isRefreshing ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$loader$2d$circle$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Loader2$3e$__["Loader2"], {
-                                                className: "w-4 h-4 mr-2 animate-spin"
-                                            }, void 0, false, {
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
+                                                variant: "outline",
+                                                onClick: refreshQrCode,
+                                                disabled: isRefreshing,
+                                                children: [
+                                                    isRefreshing ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$loader$2d$circle$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Loader2$3e$__["Loader2"], {
+                                                        className: "w-4 h-4 mr-2 animate-spin"
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/src/app/admin/whatsapp/components/QrCodeDialog.tsx",
+                                                        lineNumber: 431,
+                                                        columnNumber: 23
+                                                    }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$refresh$2d$cw$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__RefreshCw$3e$__["RefreshCw"], {
+                                                        className: "w-4 h-4 mr-2"
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/src/app/admin/whatsapp/components/QrCodeDialog.tsx",
+                                                        lineNumber: 433,
+                                                        columnNumber: 23
+                                                    }, this),
+                                                    "Tentar Novamente"
+                                                ]
+                                            }, void 0, true, {
                                                 fileName: "[project]/src/app/admin/whatsapp/components/QrCodeDialog.tsx",
-                                                lineNumber: 347,
-                                                columnNumber: 21
-                                            }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$refresh$2d$cw$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__RefreshCw$3e$__["RefreshCw"], {
-                                                className: "w-4 h-4 mr-2"
-                                            }, void 0, false, {
-                                                fileName: "[project]/src/app/admin/whatsapp/components/QrCodeDialog.tsx",
-                                                lineNumber: 349,
-                                                columnNumber: 21
+                                                lineNumber: 429,
+                                                columnNumber: 19
                                             }, this),
-                                            "Tentar Novamente"
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
+                                                variant: "outline",
+                                                onClick: checkConnectionStatus,
+                                                disabled: isCheckingStatus,
+                                                children: [
+                                                    isCheckingStatus ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$loader$2d$circle$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Loader2$3e$__["Loader2"], {
+                                                        className: "w-4 h-4 mr-2 animate-spin"
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/src/app/admin/whatsapp/components/QrCodeDialog.tsx",
+                                                        lineNumber: 439,
+                                                        columnNumber: 23
+                                                    }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$wifi$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Wifi$3e$__["Wifi"], {
+                                                        className: "w-4 h-4 mr-2"
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/src/app/admin/whatsapp/components/QrCodeDialog.tsx",
+                                                        lineNumber: 441,
+                                                        columnNumber: 23
+                                                    }, this),
+                                                    "Verificar Status"
+                                                ]
+                                            }, void 0, true, {
+                                                fileName: "[project]/src/app/admin/whatsapp/components/QrCodeDialog.tsx",
+                                                lineNumber: 437,
+                                                columnNumber: 19
+                                            }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/app/admin/whatsapp/components/QrCodeDialog.tsx",
-                                        lineNumber: 345,
+                                        lineNumber: 428,
                                         columnNumber: 17
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/app/admin/whatsapp/components/QrCodeDialog.tsx",
-                                lineNumber: 337,
+                                lineNumber: 420,
                                 columnNumber: 15
                             }, this)
                         }, void 0, false, {
                             fileName: "[project]/src/app/admin/whatsapp/components/QrCodeDialog.tsx",
-                            lineNumber: 286,
+                            lineNumber: 354,
                             columnNumber: 11
                         }, this),
                         pollingIntervalRef.current && qrData?.status === 'CONNECTING' && !isConnectedRef.current && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2209,33 +2322,48 @@ function QrCodeDialog({ instance, open, onOpenChange, onStatusUpdate }) {
                                 children: "⟳ Monitorando conexão automaticamente..."
                             }, void 0, false, {
                                 fileName: "[project]/src/app/admin/whatsapp/components/QrCodeDialog.tsx",
-                                lineNumber: 360,
+                                lineNumber: 453,
                                 columnNumber: 15
                             }, this)
                         }, void 0, false, {
                             fileName: "[project]/src/app/admin/whatsapp/components/QrCodeDialog.tsx",
-                            lineNumber: 359,
+                            lineNumber: 452,
+                            columnNumber: 13
+                        }, this),
+                        qrData?.status === 'CONNECTING' && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                            className: "text-center",
+                            children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                className: "text-xs text-muted-foreground",
+                                children: '💡 Se você já conectou no celular, clique no botão "Verificar Status" para atualizar'
+                            }, void 0, false, {
+                                fileName: "[project]/src/app/admin/whatsapp/components/QrCodeDialog.tsx",
+                                lineNumber: 462,
+                                columnNumber: 15
+                            }, this)
+                        }, void 0, false, {
+                            fileName: "[project]/src/app/admin/whatsapp/components/QrCodeDialog.tsx",
+                            lineNumber: 461,
                             columnNumber: 13
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/src/app/admin/whatsapp/components/QrCodeDialog.tsx",
-                    lineNumber: 271,
+                    lineNumber: 339,
                     columnNumber: 9
                 }, this)
             ]
         }, void 0, true, {
             fileName: "[project]/src/app/admin/whatsapp/components/QrCodeDialog.tsx",
-            lineNumber: 255,
+            lineNumber: 308,
             columnNumber: 7
         }, this)
     }, void 0, false, {
         fileName: "[project]/src/app/admin/whatsapp/components/QrCodeDialog.tsx",
-        lineNumber: 254,
+        lineNumber: 307,
         columnNumber: 5
     }, this);
 }
-_s(QrCodeDialog, "gOsSxXNMGDcmC7gdtrtV409A2TA=", false, function() {
+_s(QrCodeDialog, "RjqCEX9B0SNrgR4xggdyxlVhS10=", false, function() {
     return [
         __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$hooks$2f$use$2d$toast$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useToast"]
     ];
@@ -3561,7 +3689,6 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist
 var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/components/ui/button.tsx [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/components/ui/card.tsx [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$badge$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/components/ui/badge.tsx [app-client] (ecmascript)");
-var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$separator$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/components/ui/separator.tsx [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$plus$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Plus$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/plus.js [app-client] (ecmascript) <export default as Plus>");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$trash$2d$2$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Trash2$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/trash-2.js [app-client] (ecmascript) <export default as Trash2>");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$activity$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Activity$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/activity.js [app-client] (ecmascript) <export default as Activity>");
@@ -3575,6 +3702,7 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$re
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$ellipsis$2d$vertical$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__MoreVertical$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/ellipsis-vertical.js [app-client] (ecmascript) <export default as MoreVertical>");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$power$2d$off$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__PowerOff$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/power-off.js [app-client] (ecmascript) <export default as PowerOff>");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$rotate$2d$ccw$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__RotateCcw$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/rotate-ccw.js [app-client] (ecmascript) <export default as RotateCcw>");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$wifi$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Wifi$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/wifi.js [app-client] (ecmascript) <export default as Wifi>");
 var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$hooks$2f$use$2d$toast$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/hooks/use-toast.ts [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$dropdown$2d$menu$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/components/ui/dropdown-menu.tsx [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$alert$2d$dialog$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/components/ui/alert-dialog.tsx [app-client] (ecmascript)");
@@ -3585,7 +3713,6 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$auth$2f
 ;
 var _s = __turbopack_context__.k.signature();
 'use client';
-;
 ;
 ;
 ;
@@ -3705,27 +3832,53 @@ function WhatsAppPage() {
     };
     const handleInstanceAction = async (instance, action)=>{
         try {
-            const response = await fetch(`/api/whatsapp/instances/${instance.id}/status`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    action
-                })
+            const endpoint = `/api/whatsapp/instances/${instance.id}/${action}`;
+            const response = await fetch(endpoint, {
+                method: 'POST'
             });
             if (response.ok) {
-                // Recarregar dados após ação
-                await loadInstances();
                 toast({
                     title: 'Sucesso',
-                    description: `Ação "${action}" executada com sucesso!`
+                    description: `Ação ${action} executada com sucesso!`
                 });
+                // Atualizar lista
+                await loadInstances();
             } else {
-                const data = await response.json();
+                const error = await response.json();
                 toast({
                     title: 'Erro',
-                    description: data.error || `Erro ao executar ação "${action}"`,
+                    description: error.error || `Erro ao executar ${action}`,
+                    variant: 'destructive'
+                });
+            }
+        } catch (error) {
+            toast({
+                title: 'Erro',
+                description: 'Erro de conexão',
+                variant: 'destructive'
+            });
+        }
+    };
+    // Função para verificar status de uma instância específica
+    const handleCheckStatus = async (instance)=>{
+        try {
+            const response = await fetch(`/api/whatsapp/instances/${instance.id}/status`);
+            if (response.ok) {
+                const updatedInstance = await response.json();
+                // Atualizar a instância específica na lista
+                setInstances((prev)=>prev.map((inst)=>inst.id === instance.id ? {
+                            ...inst,
+                            ...updatedInstance
+                        } : inst));
+                toast({
+                    title: 'Status atualizado',
+                    description: `Status: ${updatedInstance.status}`
+                });
+            } else {
+                const error = await response.json();
+                toast({
+                    title: 'Erro',
+                    description: error.error || 'Erro ao verificar status',
                     variant: 'destructive'
                 });
             }
@@ -3774,14 +3927,14 @@ function WhatsAppPage() {
                     className: "w-3 h-3 mr-1"
                 }, void 0, false, {
                     fileName: "[project]/src/app/admin/whatsapp/page.tsx",
-                    lineNumber: 236,
+                    lineNumber: 270,
                     columnNumber: 9
                 }, this),
                 config.label
             ]
         }, void 0, true, {
             fileName: "[project]/src/app/admin/whatsapp/page.tsx",
-            lineNumber: 235,
+            lineNumber: 269,
             columnNumber: 7
         }, this);
     };
@@ -3798,14 +3951,14 @@ function WhatsAppPage() {
                             className: "w-4 h-4"
                         }, void 0, false, {
                             fileName: "[project]/src/app/admin/whatsapp/page.tsx",
-                            lineNumber: 252,
+                            lineNumber: 286,
                             columnNumber: 13
                         }, this),
                         "Conectar"
                     ]
                 }, void 0, true, {
                     fileName: "[project]/src/app/admin/whatsapp/page.tsx",
-                    lineNumber: 247,
+                    lineNumber: 281,
                     columnNumber: 11
                 }, this);
             case 'CONNECTING':
@@ -3819,14 +3972,14 @@ function WhatsAppPage() {
                             className: "w-4 h-4"
                         }, void 0, false, {
                             fileName: "[project]/src/app/admin/whatsapp/page.tsx",
-                            lineNumber: 264,
+                            lineNumber: 298,
                             columnNumber: 13
                         }, this),
                         "Ver QR Code"
                     ]
                 }, void 0, true, {
                     fileName: "[project]/src/app/admin/whatsapp/page.tsx",
-                    lineNumber: 258,
+                    lineNumber: 292,
                     columnNumber: 11
                 }, this);
             case 'CONNECTED':
@@ -3841,12 +3994,12 @@ function WhatsAppPage() {
                                 className: "w-4 h-4"
                             }, void 0, false, {
                                 fileName: "[project]/src/app/admin/whatsapp/page.tsx",
-                                lineNumber: 276,
+                                lineNumber: 310,
                                 columnNumber: 15
                             }, this)
                         }, void 0, false, {
                             fileName: "[project]/src/app/admin/whatsapp/page.tsx",
-                            lineNumber: 271,
+                            lineNumber: 305,
                             columnNumber: 13
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
@@ -3857,18 +4010,18 @@ function WhatsAppPage() {
                                 className: "w-4 h-4"
                             }, void 0, false, {
                                 fileName: "[project]/src/app/admin/whatsapp/page.tsx",
-                                lineNumber: 283,
+                                lineNumber: 317,
                                 columnNumber: 15
                             }, this)
                         }, void 0, false, {
                             fileName: "[project]/src/app/admin/whatsapp/page.tsx",
-                            lineNumber: 278,
+                            lineNumber: 312,
                             columnNumber: 13
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/src/app/admin/whatsapp/page.tsx",
-                    lineNumber: 270,
+                    lineNumber: 304,
                     columnNumber: 11
                 }, this);
             default:
@@ -3887,7 +4040,7 @@ function WhatsAppPage() {
                             className: "w-8 h-8 mx-auto mb-4 animate-spin text-muted-foreground"
                         }, void 0, false, {
                             fileName: "[project]/src/app/admin/whatsapp/page.tsx",
-                            lineNumber: 297,
+                            lineNumber: 331,
                             columnNumber: 13
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -3895,23 +4048,23 @@ function WhatsAppPage() {
                             children: "Carregando instâncias WhatsApp..."
                         }, void 0, false, {
                             fileName: "[project]/src/app/admin/whatsapp/page.tsx",
-                            lineNumber: 298,
+                            lineNumber: 332,
                             columnNumber: 13
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/src/app/admin/whatsapp/page.tsx",
-                    lineNumber: 296,
+                    lineNumber: 330,
                     columnNumber: 11
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/src/app/admin/whatsapp/page.tsx",
-                lineNumber: 295,
+                lineNumber: 329,
                 columnNumber: 9
             }, this)
         }, void 0, false, {
             fileName: "[project]/src/app/admin/whatsapp/page.tsx",
-            lineNumber: 294,
+            lineNumber: 328,
             columnNumber: 7
         }, this);
     }
@@ -3930,7 +4083,7 @@ function WhatsAppPage() {
                                     children: "WhatsApp"
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/admin/whatsapp/page.tsx",
-                                    lineNumber: 311,
+                                    lineNumber: 345,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -3938,13 +4091,13 @@ function WhatsAppPage() {
                                     children: "Gerencie suas instâncias e integrações WhatsApp"
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/admin/whatsapp/page.tsx",
-                                    lineNumber: 312,
+                                    lineNumber: 346,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/app/admin/whatsapp/page.tsx",
-                            lineNumber: 310,
+                            lineNumber: 344,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
@@ -3954,25 +4107,25 @@ function WhatsAppPage() {
                                     className: "w-4 h-4 mr-2"
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/admin/whatsapp/page.tsx",
-                                    lineNumber: 317,
+                                    lineNumber: 351,
                                     columnNumber: 13
                                 }, this),
                                 "Nova Instância"
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/app/admin/whatsapp/page.tsx",
-                            lineNumber: 316,
+                            lineNumber: 350,
                             columnNumber: 11
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/src/app/admin/whatsapp/page.tsx",
-                    lineNumber: 309,
+                    lineNumber: 343,
                     columnNumber: 9
                 }, this),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$app$2f$admin$2f$whatsapp$2f$components$2f$EvolutionApiStatus$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["EvolutionApiStatus"], {}, void 0, false, {
                     fileName: "[project]/src/app/admin/whatsapp/page.tsx",
-                    lineNumber: 323,
+                    lineNumber: 357,
                     columnNumber: 9
                 }, this),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3991,7 +4144,7 @@ function WhatsAppPage() {
                                                     children: "Total"
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/admin/whatsapp/page.tsx",
-                                                    lineNumber: 331,
+                                                    lineNumber: 365,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -3999,36 +4152,36 @@ function WhatsAppPage() {
                                                     children: instances.length
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/admin/whatsapp/page.tsx",
-                                                    lineNumber: 332,
+                                                    lineNumber: 366,
                                                     columnNumber: 19
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/src/app/admin/whatsapp/page.tsx",
-                                            lineNumber: 330,
+                                            lineNumber: 364,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$smartphone$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Smartphone$3e$__["Smartphone"], {
                                             className: "w-8 h-8 text-muted-foreground"
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/admin/whatsapp/page.tsx",
-                                            lineNumber: 334,
+                                            lineNumber: 368,
                                             columnNumber: 17
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/src/app/admin/whatsapp/page.tsx",
-                                    lineNumber: 329,
+                                    lineNumber: 363,
                                     columnNumber: 15
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/src/app/admin/whatsapp/page.tsx",
-                                lineNumber: 328,
+                                lineNumber: 362,
                                 columnNumber: 13
                             }, this)
                         }, void 0, false, {
                             fileName: "[project]/src/app/admin/whatsapp/page.tsx",
-                            lineNumber: 327,
+                            lineNumber: 361,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Card"], {
@@ -4044,7 +4197,7 @@ function WhatsAppPage() {
                                                     children: "Conectadas"
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/admin/whatsapp/page.tsx",
-                                                    lineNumber: 343,
+                                                    lineNumber: 377,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -4052,36 +4205,36 @@ function WhatsAppPage() {
                                                     children: instances.filter((i)=>i.status === 'CONNECTED').length
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/admin/whatsapp/page.tsx",
-                                                    lineNumber: 344,
+                                                    lineNumber: 378,
                                                     columnNumber: 19
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/src/app/admin/whatsapp/page.tsx",
-                                            lineNumber: 342,
+                                            lineNumber: 376,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$circle$2d$check$2d$big$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__CheckCircle$3e$__["CheckCircle"], {
                                             className: "w-8 h-8 text-green-600"
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/admin/whatsapp/page.tsx",
-                                            lineNumber: 348,
+                                            lineNumber: 382,
                                             columnNumber: 17
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/src/app/admin/whatsapp/page.tsx",
-                                    lineNumber: 341,
+                                    lineNumber: 375,
                                     columnNumber: 15
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/src/app/admin/whatsapp/page.tsx",
-                                lineNumber: 340,
+                                lineNumber: 374,
                                 columnNumber: 13
                             }, this)
                         }, void 0, false, {
                             fileName: "[project]/src/app/admin/whatsapp/page.tsx",
-                            lineNumber: 339,
+                            lineNumber: 373,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Card"], {
@@ -4097,7 +4250,7 @@ function WhatsAppPage() {
                                                     children: "Conversas"
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/admin/whatsapp/page.tsx",
-                                                    lineNumber: 357,
+                                                    lineNumber: 391,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -4105,36 +4258,36 @@ function WhatsAppPage() {
                                                     children: instances.reduce((acc, i)=>acc + (i._count?.conversations || 0), 0)
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/admin/whatsapp/page.tsx",
-                                                    lineNumber: 358,
+                                                    lineNumber: 392,
                                                     columnNumber: 19
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/src/app/admin/whatsapp/page.tsx",
-                                            lineNumber: 356,
+                                            lineNumber: 390,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$message$2d$square$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__MessageSquare$3e$__["MessageSquare"], {
                                             className: "w-8 h-8 text-muted-foreground"
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/admin/whatsapp/page.tsx",
-                                            lineNumber: 362,
+                                            lineNumber: 396,
                                             columnNumber: 17
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/src/app/admin/whatsapp/page.tsx",
-                                    lineNumber: 355,
+                                    lineNumber: 389,
                                     columnNumber: 15
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/src/app/admin/whatsapp/page.tsx",
-                                lineNumber: 354,
+                                lineNumber: 388,
                                 columnNumber: 13
                             }, this)
                         }, void 0, false, {
                             fileName: "[project]/src/app/admin/whatsapp/page.tsx",
-                            lineNumber: 353,
+                            lineNumber: 387,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Card"], {
@@ -4150,7 +4303,7 @@ function WhatsAppPage() {
                                                     children: "Mensagens"
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/admin/whatsapp/page.tsx",
-                                                    lineNumber: 371,
+                                                    lineNumber: 405,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -4158,42 +4311,42 @@ function WhatsAppPage() {
                                                     children: instances.reduce((acc, i)=>acc + (i._count?.messages || 0), 0)
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/admin/whatsapp/page.tsx",
-                                                    lineNumber: 372,
+                                                    lineNumber: 406,
                                                     columnNumber: 19
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/src/app/admin/whatsapp/page.tsx",
-                                            lineNumber: 370,
+                                            lineNumber: 404,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$users$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Users$3e$__["Users"], {
                                             className: "w-8 h-8 text-muted-foreground"
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/admin/whatsapp/page.tsx",
-                                            lineNumber: 376,
+                                            lineNumber: 410,
                                             columnNumber: 17
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/src/app/admin/whatsapp/page.tsx",
-                                    lineNumber: 369,
+                                    lineNumber: 403,
                                     columnNumber: 15
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/src/app/admin/whatsapp/page.tsx",
-                                lineNumber: 368,
+                                lineNumber: 402,
                                 columnNumber: 13
                             }, this)
                         }, void 0, false, {
                             fileName: "[project]/src/app/admin/whatsapp/page.tsx",
-                            lineNumber: 367,
+                            lineNumber: 401,
                             columnNumber: 11
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/src/app/admin/whatsapp/page.tsx",
-                    lineNumber: 326,
+                    lineNumber: 360,
                     columnNumber: 9
                 }, this),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4206,7 +4359,7 @@ function WhatsAppPage() {
                                     className: "w-12 h-12 mx-auto mb-4 text-muted-foreground"
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/admin/whatsapp/page.tsx",
-                                    lineNumber: 387,
+                                    lineNumber: 421,
                                     columnNumber: 17
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
@@ -4214,7 +4367,7 @@ function WhatsAppPage() {
                                     children: "Nenhuma instância encontrada"
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/admin/whatsapp/page.tsx",
-                                    lineNumber: 388,
+                                    lineNumber: 422,
                                     columnNumber: 17
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -4222,7 +4375,7 @@ function WhatsAppPage() {
                                     children: "Crie sua primeira instância WhatsApp para começar a usar a integração."
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/admin/whatsapp/page.tsx",
-                                    lineNumber: 389,
+                                    lineNumber: 423,
                                     columnNumber: 17
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
@@ -4232,25 +4385,25 @@ function WhatsAppPage() {
                                             className: "w-4 h-4 mr-2"
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/admin/whatsapp/page.tsx",
-                                            lineNumber: 393,
+                                            lineNumber: 427,
                                             columnNumber: 19
                                         }, this),
                                         "Criar Primeira Instância"
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/src/app/admin/whatsapp/page.tsx",
-                                    lineNumber: 392,
+                                    lineNumber: 426,
                                     columnNumber: 17
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/app/admin/whatsapp/page.tsx",
-                            lineNumber: 386,
+                            lineNumber: 420,
                             columnNumber: 15
                         }, this)
                     }, void 0, false, {
                         fileName: "[project]/src/app/admin/whatsapp/page.tsx",
-                        lineNumber: 385,
+                        lineNumber: 419,
                         columnNumber: 13
                     }, this) : instances.map((instance)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Card"], {
                             children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["CardContent"], {
@@ -4267,12 +4420,12 @@ function WhatsAppPage() {
                                                         className: "w-6 h-6 text-green-600"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/admin/whatsapp/page.tsx",
-                                                        lineNumber: 405,
+                                                        lineNumber: 439,
                                                         columnNumber: 25
                                                     }, this)
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/admin/whatsapp/page.tsx",
-                                                    lineNumber: 404,
+                                                    lineNumber: 438,
                                                     columnNumber: 23
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4282,7 +4435,7 @@ function WhatsAppPage() {
                                                             children: instance.name
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/app/admin/whatsapp/page.tsx",
-                                                            lineNumber: 409,
+                                                            lineNumber: 443,
                                                             columnNumber: 25
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4294,13 +4447,13 @@ function WhatsAppPage() {
                                                                     children: instance.phoneNumber
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/src/app/admin/whatsapp/page.tsx",
-                                                                    lineNumber: 413,
+                                                                    lineNumber: 447,
                                                                     columnNumber: 29
                                                                 }, this)
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/src/app/admin/whatsapp/page.tsx",
-                                                            lineNumber: 410,
+                                                            lineNumber: 444,
                                                             columnNumber: 25
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -4313,19 +4466,19 @@ function WhatsAppPage() {
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/src/app/admin/whatsapp/page.tsx",
-                                                            lineNumber: 418,
+                                                            lineNumber: 452,
                                                             columnNumber: 25
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/src/app/admin/whatsapp/page.tsx",
-                                                    lineNumber: 408,
+                                                    lineNumber: 442,
                                                     columnNumber: 23
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/src/app/admin/whatsapp/page.tsx",
-                                            lineNumber: 403,
+                                            lineNumber: 437,
                                             columnNumber: 21
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4343,17 +4496,17 @@ function WhatsAppPage() {
                                                                     className: "w-4 h-4"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/src/app/admin/whatsapp/page.tsx",
-                                                                    lineNumber: 430,
+                                                                    lineNumber: 464,
                                                                     columnNumber: 29
                                                                 }, this)
                                                             }, void 0, false, {
                                                                 fileName: "[project]/src/app/admin/whatsapp/page.tsx",
-                                                                lineNumber: 429,
+                                                                lineNumber: 463,
                                                                 columnNumber: 27
                                                             }, this)
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/app/admin/whatsapp/page.tsx",
-                                                            lineNumber: 428,
+                                                            lineNumber: 462,
                                                             columnNumber: 25
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$dropdown$2d$menu$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["DropdownMenuContent"], {
@@ -4366,14 +4519,31 @@ function WhatsAppPage() {
                                                                             className: "w-4 h-4 mr-2"
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/src/app/admin/whatsapp/page.tsx",
-                                                                            lineNumber: 435,
+                                                                            lineNumber: 469,
                                                                             columnNumber: 29
                                                                         }, this),
                                                                         "Ver QR Code"
                                                                     ]
                                                                 }, void 0, true, {
                                                                     fileName: "[project]/src/app/admin/whatsapp/page.tsx",
-                                                                    lineNumber: 434,
+                                                                    lineNumber: 468,
+                                                                    columnNumber: 27
+                                                                }, this),
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$dropdown$2d$menu$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["DropdownMenuItem"], {
+                                                                    onClick: ()=>handleCheckStatus(instance),
+                                                                    children: [
+                                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$wifi$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Wifi$3e$__["Wifi"], {
+                                                                            className: "w-4 h-4 mr-2"
+                                                                        }, void 0, false, {
+                                                                            fileName: "[project]/src/app/admin/whatsapp/page.tsx",
+                                                                            lineNumber: 473,
+                                                                            columnNumber: 29
+                                                                        }, this),
+                                                                        "Verificar Status"
+                                                                    ]
+                                                                }, void 0, true, {
+                                                                    fileName: "[project]/src/app/admin/whatsapp/page.tsx",
+                                                                    lineNumber: 472,
                                                                     columnNumber: 27
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$dropdown$2d$menu$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["DropdownMenuItem"], {
@@ -4383,21 +4553,36 @@ function WhatsAppPage() {
                                                                             className: "w-4 h-4 mr-2"
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/src/app/admin/whatsapp/page.tsx",
-                                                                            lineNumber: 439,
+                                                                            lineNumber: 477,
                                                                             columnNumber: 29
                                                                         }, this),
                                                                         "Reiniciar"
                                                                     ]
                                                                 }, void 0, true, {
                                                                     fileName: "[project]/src/app/admin/whatsapp/page.tsx",
-                                                                    lineNumber: 438,
+                                                                    lineNumber: 476,
                                                                     columnNumber: 27
                                                                 }, this),
-                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$separator$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Separator"], {
-                                                                    className: "my-1"
-                                                                }, void 0, false, {
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$dropdown$2d$menu$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["DropdownMenuItem"], {
+                                                                    onClick: ()=>handleInstanceAction(instance, 'logout'),
+                                                                    children: [
+                                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$power$2d$off$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__PowerOff$3e$__["PowerOff"], {
+                                                                            className: "w-4 h-4 mr-2"
+                                                                        }, void 0, false, {
+                                                                            fileName: "[project]/src/app/admin/whatsapp/page.tsx",
+                                                                            lineNumber: 481,
+                                                                            columnNumber: 29
+                                                                        }, this),
+                                                                        "Desconectar"
+                                                                    ]
+                                                                }, void 0, true, {
                                                                     fileName: "[project]/src/app/admin/whatsapp/page.tsx",
-                                                                    lineNumber: 442,
+                                                                    lineNumber: 480,
+                                                                    columnNumber: 27
+                                                                }, this),
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$dropdown$2d$menu$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["DropdownMenuSeparator"], {}, void 0, false, {
+                                                                    fileName: "[project]/src/app/admin/whatsapp/page.tsx",
+                                                                    lineNumber: 484,
                                                                     columnNumber: 27
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$dropdown$2d$menu$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["DropdownMenuItem"], {
@@ -4408,53 +4593,53 @@ function WhatsAppPage() {
                                                                             className: "w-4 h-4 mr-2"
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/src/app/admin/whatsapp/page.tsx",
-                                                                            lineNumber: 447,
+                                                                            lineNumber: 489,
                                                                             columnNumber: 29
                                                                         }, this),
                                                                         "Deletar"
                                                                     ]
                                                                 }, void 0, true, {
                                                                     fileName: "[project]/src/app/admin/whatsapp/page.tsx",
-                                                                    lineNumber: 443,
+                                                                    lineNumber: 485,
                                                                     columnNumber: 27
                                                                 }, this)
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/src/app/admin/whatsapp/page.tsx",
-                                                            lineNumber: 433,
+                                                            lineNumber: 467,
                                                             columnNumber: 25
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/src/app/admin/whatsapp/page.tsx",
-                                                    lineNumber: 427,
+                                                    lineNumber: 461,
                                                     columnNumber: 23
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/src/app/admin/whatsapp/page.tsx",
-                                            lineNumber: 424,
+                                            lineNumber: 458,
                                             columnNumber: 21
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/src/app/admin/whatsapp/page.tsx",
-                                    lineNumber: 402,
+                                    lineNumber: 436,
                                     columnNumber: 19
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/src/app/admin/whatsapp/page.tsx",
-                                lineNumber: 401,
+                                lineNumber: 435,
                                 columnNumber: 17
                             }, this)
                         }, instance.id, false, {
                             fileName: "[project]/src/app/admin/whatsapp/page.tsx",
-                            lineNumber: 400,
+                            lineNumber: 434,
                             columnNumber: 15
                         }, this))
                 }, void 0, false, {
                     fileName: "[project]/src/app/admin/whatsapp/page.tsx",
-                    lineNumber: 383,
+                    lineNumber: 417,
                     columnNumber: 9
                 }, this),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$app$2f$admin$2f$whatsapp$2f$components$2f$CreateInstanceDialog$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["CreateInstanceDialog"], {
@@ -4463,7 +4648,7 @@ function WhatsAppPage() {
                     onInstanceCreated: handleInstanceCreated
                 }, void 0, false, {
                     fileName: "[project]/src/app/admin/whatsapp/page.tsx",
-                    lineNumber: 461,
+                    lineNumber: 503,
                     columnNumber: 9
                 }, this),
                 qrInstance && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$app$2f$admin$2f$whatsapp$2f$components$2f$QrCodeDialog$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["QrCodeDialog"], {
@@ -4473,7 +4658,7 @@ function WhatsAppPage() {
                     onStatusUpdate: ()=>updateInstance(qrInstance.id)
                 }, void 0, false, {
                     fileName: "[project]/src/app/admin/whatsapp/page.tsx",
-                    lineNumber: 468,
+                    lineNumber: 510,
                     columnNumber: 11
                 }, this),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$alert$2d$dialog$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["AlertDialog"], {
@@ -4487,7 +4672,7 @@ function WhatsAppPage() {
                                         children: "Deletar Instância"
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/admin/whatsapp/page.tsx",
-                                        lineNumber: 480,
+                                        lineNumber: 522,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$alert$2d$dialog$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["AlertDialogDescription"], {
@@ -4498,13 +4683,13 @@ function WhatsAppPage() {
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/app/admin/whatsapp/page.tsx",
-                                        lineNumber: 481,
+                                        lineNumber: 523,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/app/admin/whatsapp/page.tsx",
-                                lineNumber: 479,
+                                lineNumber: 521,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$alert$2d$dialog$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["AlertDialogFooter"], {
@@ -4513,7 +4698,7 @@ function WhatsAppPage() {
                                         children: "Cancelar"
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/admin/whatsapp/page.tsx",
-                                        lineNumber: 487,
+                                        lineNumber: 529,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$alert$2d$dialog$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["AlertDialogAction"], {
@@ -4522,35 +4707,35 @@ function WhatsAppPage() {
                                         children: "Deletar"
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/admin/whatsapp/page.tsx",
-                                        lineNumber: 488,
+                                        lineNumber: 530,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/app/admin/whatsapp/page.tsx",
-                                lineNumber: 486,
+                                lineNumber: 528,
                                 columnNumber: 13
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/app/admin/whatsapp/page.tsx",
-                        lineNumber: 478,
+                        lineNumber: 520,
                         columnNumber: 11
                     }, this)
                 }, void 0, false, {
                     fileName: "[project]/src/app/admin/whatsapp/page.tsx",
-                    lineNumber: 477,
+                    lineNumber: 519,
                     columnNumber: 9
                 }, this)
             ]
         }, void 0, true, {
             fileName: "[project]/src/app/admin/whatsapp/page.tsx",
-            lineNumber: 307,
+            lineNumber: 341,
             columnNumber: 7
         }, this)
     }, void 0, false, {
         fileName: "[project]/src/app/admin/whatsapp/page.tsx",
-        lineNumber: 306,
+        lineNumber: 340,
         columnNumber: 5
     }, this);
 }
@@ -4568,4 +4753,4 @@ if (typeof globalThis.$RefreshHelpers$ === 'object' && globalThis.$RefreshHelper
 }}),
 }]);
 
-//# sourceMappingURL=src_fd4cff2c._.js.map
+//# sourceMappingURL=src_5eeda8e0._.js.map

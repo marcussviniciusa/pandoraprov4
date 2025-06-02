@@ -20,7 +20,8 @@ import {
   MoreVertical,
   Power,
   PowerOff,
-  RotateCcw
+  RotateCcw,
+  Wifi
 } from 'lucide-react'
 import { useToast } from '@/hooks/use-toast'
 import {
@@ -28,6 +29,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
+  DropdownMenuSeparator
 } from '@/components/ui/dropdown-menu'
 import {
   AlertDialog,
@@ -170,24 +172,56 @@ export default function WhatsAppPage() {
 
   const handleInstanceAction = async (instance: WhatsAppInstance, action: 'restart' | 'logout' | 'connect') => {
     try {
-      const response = await fetch(`/api/whatsapp/instances/${instance.id}/status`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action })
-      })
+      const endpoint = `/api/whatsapp/instances/${instance.id}/${action}`
+      const response = await fetch(endpoint, { method: 'POST' })
 
       if (response.ok) {
-        // Recarregar dados após ação
-        await loadInstances()
         toast({
           title: 'Sucesso',
-          description: `Ação "${action}" executada com sucesso!`
+          description: `Ação ${action} executada com sucesso!`
         })
+        
+        // Atualizar lista
+        await loadInstances()
       } else {
-        const data = await response.json()
+        const error = await response.json()
         toast({
           title: 'Erro',
-          description: data.error || `Erro ao executar ação "${action}"`,
+          description: error.error || `Erro ao executar ${action}`,
+          variant: 'destructive'
+        })
+      }
+    } catch (error) {
+      toast({
+        title: 'Erro',
+        description: 'Erro de conexão',
+        variant: 'destructive'
+      })
+    }
+  }
+
+  // Função para verificar status de uma instância específica
+  const handleCheckStatus = async (instance: WhatsAppInstance) => {
+    try {
+      const response = await fetch(`/api/whatsapp/instances/${instance.id}/status`)
+      
+      if (response.ok) {
+        const updatedInstance = await response.json()
+        
+        // Atualizar a instância específica na lista
+        setInstances(prev => prev.map(inst => 
+          inst.id === instance.id ? { ...inst, ...updatedInstance } : inst
+        ))
+        
+        toast({
+          title: 'Status atualizado',
+          description: `Status: ${updatedInstance.status}`
+        })
+      } else {
+        const error = await response.json()
+        toast({
+          title: 'Erro',
+          description: error.error || 'Erro ao verificar status',
           variant: 'destructive'
         })
       }
@@ -435,11 +469,19 @@ export default function WhatsAppPage() {
                             <QrCode className="w-4 h-4 mr-2" />
                             Ver QR Code
                           </DropdownMenuItem>
+                          <DropdownMenuItem onClick={() => handleCheckStatus(instance)}>
+                            <Wifi className="w-4 h-4 mr-2" />
+                            Verificar Status
+                          </DropdownMenuItem>
                           <DropdownMenuItem onClick={() => handleInstanceAction(instance, 'restart')}>
                             <RotateCcw className="w-4 h-4 mr-2" />
                             Reiniciar
                           </DropdownMenuItem>
-                          <Separator className="my-1" />
+                          <DropdownMenuItem onClick={() => handleInstanceAction(instance, 'logout')}>
+                            <PowerOff className="w-4 h-4 mr-2" />
+                            Desconectar
+                          </DropdownMenuItem>
+                          <DropdownMenuSeparator />
                           <DropdownMenuItem 
                             onClick={() => setDeletingInstance(instance)}
                             className="text-red-600"

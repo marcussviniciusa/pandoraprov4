@@ -1,7 +1,7 @@
 "use client"
 
 import { useRouter } from "next/navigation"
-import { useEffect, useState } from "react"
+import { useEffect, useState, useRef } from "react"
 import { useForcedSession } from "@/hooks/use-forced-session"
 
 interface AuthGuardProps {
@@ -18,20 +18,29 @@ export default function AuthGuard({
   const { data: session, status } = useForcedSession()
   const router = useRouter()
   const [shouldRender, setShouldRender] = useState(false)
+  const lastLoggedStateRef = useRef<string>('')
 
   useEffect(() => {
-    console.log('🔒 AuthGuard Debug:', {
-      status,
-      hasSession: !!session,
-      userRole: session?.user?.role,
-      requiredRole,
-      shouldRender,
-      timestamp: new Date().toISOString()
-    })
+    // Log apenas quando há mudança significativa
+    const currentState = `${status}-${!!session}-${session?.user?.role}-${requiredRole}-${shouldRender}`
+    
+    if (lastLoggedStateRef.current !== currentState) {
+      console.log('🔒 AuthGuard Debug:', {
+        status,
+        hasSession: !!session,
+        userRole: session?.user?.role,
+        requiredRole,
+        shouldRender,
+        timestamp: new Date().toISOString()
+      })
+      lastLoggedStateRef.current = currentState
+    }
 
     // Se está carregando, aguarda
     if (status === "loading") {
-      console.log('🔒 AuthGuard: Loading...')
+      if (lastLoggedStateRef.current !== currentState) {
+        console.log('🔒 AuthGuard: Loading...')
+      }
       return
     }
 
@@ -47,8 +56,10 @@ export default function AuthGuard({
       const requiredLevel = roleHierarchy[requiredRole]
 
       if (userLevel >= requiredLevel) {
-        console.log('🔒 AuthGuard: Access granted, rendering content')
-        setShouldRender(true)
+        if (!shouldRender) {
+          console.log('🔒 AuthGuard: Access granted, rendering content')
+          setShouldRender(true)
+        }
         return
       } else {
         console.log('🔒 AuthGuard: Insufficient permissions')
@@ -63,11 +74,10 @@ export default function AuthGuard({
       router.push("/login")
       return
     }
-  }, [session, status, router, requiredRole])
+  }, [session, status, router, requiredRole, shouldRender])
 
   // Loading state
   if (status === "loading" || !shouldRender) {
-    console.log('🔒 AuthGuard: Rendering loading state')
     return fallback || (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
@@ -78,6 +88,5 @@ export default function AuthGuard({
     )
   }
 
-  console.log('🔒 AuthGuard: Rendering protected content')
   return <>{children}</>
 } 

@@ -1,7 +1,7 @@
 "use client"
 
 import { useSession } from "next-auth/react"
-import { useEffect, useState } from "react"
+import { useEffect, useState, useRef } from "react"
 
 interface ForcedSession {
   data: any
@@ -14,6 +14,9 @@ export function useForcedSession(): ForcedSession {
   const [forcedSession, setForcedSession] = useState<any>(null)
   const [isHydrated, setIsHydrated] = useState(false)
   const [hasTriedForce, setHasTriedForce] = useState(false)
+  
+  // Ref para evitar logs repetitivos
+  const lastLoggedStatusRef = useRef<string>('')
 
   // Executa verificação forçada imediatamente no mount
   useEffect(() => {
@@ -70,15 +73,21 @@ export function useForcedSession(): ForcedSession {
   const finalStatus = finalSession && finalSession.user ? "authenticated" : 
                      (isHydrated && hasTriedForce) ? "unauthenticated" : "loading"
 
-  console.log('🎯 useForcedSession result:', {
-    useSessionStatus: status,
-    useSessionHasData: !!session,
-    forcedSessionHasData: !!forcedSession,
-    finalStatus,
-    isHydrated,
-    hasTriedForce,
-    finalHasUser: !!finalSession?.user
-  })
+  // Log apenas quando há mudança significativa
+  const currentStatusSignature = `${status}-${!!session}-${!!forcedSession}-${finalStatus}-${isHydrated}-${hasTriedForce}`
+  
+  if (lastLoggedStatusRef.current !== currentStatusSignature) {
+    console.log('🎯 useForcedSession state change:', {
+      useSessionStatus: status,
+      useSessionHasData: !!session,
+      forcedSessionHasData: !!forcedSession,
+      finalStatus,
+      isHydrated,
+      hasTriedForce,
+      finalHasUser: !!finalSession?.user
+    })
+    lastLoggedStatusRef.current = currentStatusSignature
+  }
 
   return {
     data: finalSession,
