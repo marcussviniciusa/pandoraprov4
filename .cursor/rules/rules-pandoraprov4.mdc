@@ -1,0 +1,8 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+No inicio do projeto crie um md chamado funcionalidades.md, será em seleção, conforme desenvolver a funcionalidade marca como concluido, deve conter apenas as funcionalidades descritas no prompt inicial, você deve usar ele para se basear no desenvolvimento.
+
+Sempre antes de adicionar alguma funcionalidade nova, se necessario, use o mcp context7 para buscar a documentação necessaria.

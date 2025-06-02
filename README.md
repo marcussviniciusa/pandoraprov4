@@ -1,36 +1,187 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🚀 Pandora Pro - Sistema Multicanal Inteligente
 
-## Getting Started
+**Sistema completo de CRM jurídico com IA avançada para escritórios de advocacia especializados em direito previdenciário.**
 
-First, run the development server:
+## ✨ Funcionalidades Implementadas
+
+### 🤖 Sistema Multi-Provider de IA Avançado
+
+- **3 Providers Suportados**: OpenAI, Google (Gemini), Anthropic (Claude)
+- **6 Modelos de IA**: GPT-4.1-mini, GPT-4o-mini, GPT-4.5, Gemini 2.5 Pro, Claude 3.7, Claude 4
+- **4 Agentes Especializados**:
+  - 🔄 **Recepcionista IA** - Triagem inicial e direcionamento (padrão)
+  - ⚖️ **Agente Previdenciário** - Aposentadorias, auxílios, pensões
+  - 👥 **Agente BPC/LOAS** - Benefícios assistenciais para idosos e deficientes
+  - 💼 **Agente Trabalhista** - Direitos trabalhistas e demissões
+
+### 🎯 Recursos Principais
+
+- **Autenticação Hierárquica**: Super Admin, Admin, Usuário
+- **Dashboard Interativo**: Métricas em tempo real e chat de teste
+- **Configuração Flexível**: Interface admin para gerenciar providers e agentes
+- **Transferência Inteligente**: IA identifica especialidade e sugere transferência
+- **Sugestão de Tags**: Sistema automático de categorização
+- **Sistema de Auditoria**: Logs completos de todas as interações
+
+## 🛠️ Tecnologias
+
+- **Frontend**: Next.js 15, TypeScript, Tailwind CSS, shadcn/ui
+- **Backend**: Next.js API Routes, Prisma ORM
+- **Banco**: PostgreSQL
+- **IA**: LangChain, OpenAI, Google AI, Anthropic
+- **Autenticação**: NextAuth.js
+- **UI**: Componentes modernos e responsivos
+
+## 📋 Credenciais de Teste
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+# Super Administrador
+Email: admin@pandorapro.com
+Senha: admin123
+
+# Administrador do Escritório
+Email: admin@exemploadvocacia.com  
+Senha: admin123
+
+# Usuário/Advogado
+Email: advogado@exemploadvocacia.com
+Senha: admin123
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🚀 Como Executar
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 1. Instalar Dependências
+```bash
+npm install
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### 2. Configurar Banco de Dados
+```bash
+# Executar migrações
+npx prisma migrate dev
 
-## Learn More
+# Popular com dados de exemplo
+npx prisma db seed
+```
 
-To learn more about Next.js, take a look at the following resources:
+### 3. Iniciar o Sistema
+```bash
+npm run dev
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+**Acesse**: http://localhost:3000
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 🧪 Como Testar o Sistema de IA
 
-## Deploy on Vercel
+### 1. **Configure os Providers** (Admin)
+1. Faça login como admin (`admin@exemploadvocacia.com`)
+2. Clique em "Config IA" no dashboard
+3. Adicione sua API Key da OpenAI, Google ou Anthropic
+4. Configure os agentes especializados
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### 2. **Teste as Conversas** (Dashboard)
+1. No dashboard principal, use o "Teste de Agentes IA"
+2. Selecione um agente (Recepcionista vem por padrão)
+3. Digite mensagens como cliente
+4. Observe as respostas inteligentes e sugestões de transferência
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### 3. **Exemplos de Mensagens para Testar**
+
+```text
+# Para Recepcionista (triagem)
+"Oi, preciso de ajuda com minha aposentadoria"
+"Tenho 67 anos e quero o BPC"
+"Fui demitido injustamente, o que fazer?"
+
+# Para Agente Previdenciário
+"Quando posso me aposentar? Tenho 35 anos de contribuição"
+"Meu auxílio-doença foi negado, posso recorrer?"
+
+# Para Agente BPC/LOAS  
+"Sou deficiente e não tenho renda, posso pedir BPC?"
+"Minha mãe tem 67 anos e renda baixa"
+
+# Para Agente Trabalhista
+"Não recebi minhas verbas rescisórias"
+"Meu chefe não paga horas extras"
+```
+
+## 🎯 Funcionalidades em Teste
+
+### ✅ **Funcionando Completamente**
+- Sistema de autenticação e autorização
+- Configuração de providers e agentes IA
+- Chat inteligente com múltiplos agentes
+- Transferência automática entre especialistas
+- Sugestão de tags automática
+- Dashboard com métricas
+- Sistema de auditoria
+
+### ⏳ **Próximas Implementações**
+- Integração WhatsApp com Evolution API
+- CRM completo para gestão de clientes
+- Sistema de documentos com MinIO
+- Relatórios e analytics avançados
+- Webhooks para integrações externas
+
+## 🔧 Configuração Avançada
+
+### Variáveis de Ambiente Necessárias
+
+```env
+# Banco de Dados
+DATABASE_URL="postgresql://..."
+
+# NextAuth
+NEXTAUTH_SECRET="seu-secret-aqui"
+NEXTAUTH_URL="http://localhost:3000"
+
+# APIs de IA (opcional - configure via interface)
+OPENAI_API_KEY="sk-proj-..."
+GOOGLE_API_KEY="AIza..."
+ANTHROPIC_API_KEY="sk-ant-..."
+
+# Futuras integrações
+EVOLUTION_API_URL="http://..."
+EVOLUTION_API_KEY="..."
+MINIO_ENDPOINT="..."
+MINIO_ACCESS_KEY="..."
+MINIO_SECRET_KEY="..."
+```
+
+## 🏗️ Arquitetura do Sistema
+
+```
+pandoraprov4/
+├── src/
+│   ├── app/
+│   │   ├── api/              # APIs REST
+│   │   ├── admin/            # Interface administrativa
+│   │   ├── dashboard/        # Dashboard principal
+│   │   └── login/            # Autenticação
+│   ├── components/ui/        # Componentes UI
+│   ├── lib/
+│   │   ├── ai/              # Sistema multi-provider IA
+│   │   ├── auth.ts          # Configuração NextAuth
+│   │   └── prisma.ts        # Cliente Prisma
+│   └── types/               # Tipos TypeScript
+├── prisma/
+│   ├── schema.prisma        # Schema do banco
+│   ├── migrations/          # Migrações
+│   └── seed.ts             # Dados iniciais
+└── FUNCIONALIDADES.md       # Checklist do projeto
+```
+
+## 🎉 Status do Projeto
+
+**🟢 Fase 1 (Concluída)**: Sistema de IA Multi-Provider  
+**🟡 Fase 2 (Em desenvolvimento)**: Integração WhatsApp  
+**🔴 Fase 3 (Planejada)**: CRM Completo e Analytics  
+
+---
+
+## 📞 Suporte
+
+Este é um sistema em desenvolvimento ativo. Para dúvidas sobre implementação ou contribuições, consulte o arquivo `FUNCIONALIDADES.md` para ver o status detalhado de cada feature.
+
+**🚀 O Pandora Pro representa o futuro da automação jurídica com IA avançada!**

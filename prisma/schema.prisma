@@ -1,0 +1,795 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  SUPER_ADMIN
+  ADMIN
+  USER
+}
+
+enum ConversationStatus {
+  ACTIVE
+  ARCHIVED
+  CLOSED
+}
+
+enum MessageType {
+  TEXT
+  AUDIO
+  IMAGE
+  DOCUMENT
+  SYSTEM
+}
+
+enum AgentType {
+  RECEPTIONIST
+  PREVIDENCIARIO
+  BPC_LOAS
+  TRABALHISTA
+}
+
+enum AIProvider {
+  OPENAI
+  GOOGLE
+  ANTHROPIC
+}
+
+enum AIModel {
+  GPT_4_1_MINI
+  GPT_4O_MINI
+  GPT_4_5
+  GEMINI_2_5_PRO
+  CLAUDE_3_7
+  CLAUDE_4
+}
+
+enum TranscriptionProvider {
+  GOOGLE_SPEECH
+  GROQ_WHISPER
+  OPENAI_WHISPER
+}
+
+enum ToolExecutionStatus {
+  PENDING
+  SUCCESS
+  ERROR
+  TIMEOUT
+}
+
+// ============================================================================
+// ENUMS WHATSAPP
+// ============================================================================
+
+enum WhatsAppInstanceStatus {
+  CONNECTING
+  CONNECTED
+  DISCONNECTED
+  ERROR
+}
+
+enum WhatsAppMessageType {
+  TEXT
+  IMAGE
+  AUDIO
+  VIDEO
+  DOCUMENT
+  LOCATION
+  STICKER
+  CONTACT
+  POLL
+}
+
+enum WhatsAppMessageStatus {
+  SENT
+  DELIVERED
+  READ
+  FAILED
+  PENDING
+}
+
+enum WhatsAppConversationStatus {
+  OPEN
+  CLOSED
+  PENDING
+  ARCHIVED
+}
+
+enum WhatsAppImportStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+}
+
+// ============================================================================
+// USUÁRIOS E AUTENTICAÇÃO
+// ============================================================================
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  name      String
+  role      UserRole @default(USER)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relacionamentos
+  officeId String?
+  office   Office? @relation(fields: [officeId], references: [id])
+
+  // Auditoria
+  createdConversations  Conversation[] @relation("ConversationCreatedBy")
+  assignedConversations Conversation[] @relation("ConversationAssignedTo")
+  messages              Message[]
+  logs                  AuditLog[]
+  sessions              Session[]
+  toolsCreated          Tool[]         @relation("ToolCreatedBy")
+
+  // WhatsApp
+  whatsappInstancesCreated WhatsAppInstance[] @relation("WhatsAppInstanceCreatedBy")
+  whatsappImportsUploaded  WhatsAppImport[]   @relation("WhatsAppImportUploadedBy")
+  whatsappConversationsAssigned WhatsAppConversation[] @relation("WhatsAppConversationAssignedTo")
+
+  @@map("users")
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
+}
+
+// ============================================================================
+// ESCRITÓRIOS DE ADVOCACIA
+// ============================================================================
+
+model Office {
+  id              String            @id @default(cuid())
+  name            String
+  cnpj            String?           @unique
+  phone           String?
+  email           String?
+  address         String?
+  isActive        Boolean           @default(true)
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+
+  // Relacionamentos
+  users           User[]
+  clients         Client[]
+  conversations   Conversation[]
+  tags            Tag[]
+  customStatuses  CustomStatus[]
+  aiAgents        AiAgent[]
+  whatsappConfigs WhatsappConfig[]
+  documents       Document[]
+  tools           Tool[]
+  webhooks        Webhook[]
+  auditLogs       AuditLog[]
+  aiConfigs       AIProviderConfig[]
+
+  // WhatsApp
+  whatsappInstances WhatsAppInstance[]
+
+  @@map("offices")
+}
+
+// ============================================================================
+// CONFIGURAÇÕES WHATSAPP
+// ============================================================================
+
+model WhatsappConfig {
+  id         String  @id @default(cuid())
+  instanceId String  @unique
+  phone      String
+  qrCode     String?
+  isActive   Boolean @default(false)
+  apiUrl     String?
+  apiKey     String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relacionamentos
+  officeId String
+  office   Office @relation(fields: [officeId], references: [id])
+
+  conversations Conversation[]
+  messages      Message[]
+
+  @@map("whatsapp_configs")
+}
+
+// ============================================================================
+// SISTEMA WHATSAPP - EVOLUTION API
+// ============================================================================
+
+model WhatsAppInstance {
+  id             String                   @id @default(cuid())
+  name           String                   // Nome da instância
+  phoneNumber    String?                  // Número conectado
+  status         WhatsAppInstanceStatus   @default(CONNECTING)
+  qrCode         String?                  // Base64 do QR Code atual
+  webhookUrl     String?                  // URL para receber webhooks
+  officeId       String                   // Referência ao escritório
+  createdById    String                   // Admin que criou
+  connectionData Json?                    // Dados de conexão da Evolution API
+  isActive       Boolean                  @default(true)
+  createdAt      DateTime                 @default(now())
+  updatedAt      DateTime                 @updatedAt
+
+  // Relacionamentos
+  office     Office                  @relation(fields: [officeId], references: [id])
+  createdBy  User                    @relation("WhatsAppInstanceCreatedBy", fields: [createdById], references: [id])
+
+  // WhatsApp entities
+  contacts      WhatsAppContact[]
+  conversations WhatsAppConversation[]
+  messages      WhatsAppMessage[]
+  imports       WhatsAppImport[]
+
+  @@map("whatsapp_instances")
+}
+
+model WhatsAppContact {
+  id             String   @id @default(cuid())
+  instanceId     String   // Referência à instância
+  remoteJid      String   // JID do contato no WhatsApp
+  phoneNumber    String   // Número de telefone
+  name           String?  // Nome do contato
+  pushName       String?  // Nome exibido no WhatsApp
+  profilePicUrl  String?  // URL da foto do perfil
+  isGroup        Boolean  @default(false) // Se é um grupo
+  lastSeen       DateTime? // Última vez visto online
+  isBlocked      Boolean  @default(false) // Se está bloqueado
+  clientId       String?  // Referência ao cliente (se existir)
+  tags           String[] @default([]) // Tags personalizadas
+  notes          String?  // Observações do atendente
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  // Relacionamentos
+  instance      WhatsAppInstance       @relation(fields: [instanceId], references: [id], onDelete: Cascade)
+  client        Client?                @relation(fields: [clientId], references: [id])
+  conversations WhatsAppConversation[]
+  messages      WhatsAppMessage[]
+  imports       WhatsAppImport[]
+
+  @@unique([instanceId, remoteJid])
+  @@map("whatsapp_contacts")
+}
+
+model WhatsAppConversation {
+  id              String                        @id @default(cuid())
+  instanceId      String                        // Referência à instância
+  contactId       String                        // Referência ao contato
+  remoteJid       String                        // JID da conversa
+  title           String?                       // Título da conversa (para grupos)
+  isGroup         Boolean                       @default(false) // Se é conversa em grupo
+  lastMessageId   String?                       // ID da última mensagem
+  lastMessageAt   DateTime?                     // Timestamp da última mensagem
+  unreadCount     Int                           @default(0) // Mensagens não lidas
+  isArchived      Boolean                       @default(false) // Se está arquivada
+  isPinned        Boolean                       @default(false) // Se está fixada
+  assignedUserId  String?                       // Usuário responsável pelo atendimento
+  status          WhatsAppConversationStatus    @default(OPEN) // open, closed, pending
+  aiEnabled       Boolean                       @default(true) // Se IA está habilitada
+  currentAgentId  String?                       // Agente IA atual
+  metadata        Json?                         // Dados adicionais
+  createdAt       DateTime                      @default(now())
+  updatedAt       DateTime                      @updatedAt
+
+  // Relacionamentos
+  instance     WhatsAppInstance  @relation(fields: [instanceId], references: [id], onDelete: Cascade)
+  contact      WhatsAppContact   @relation(fields: [contactId], references: [id], onDelete: Cascade)
+  assignedUser User?             @relation("WhatsAppConversationAssignedTo", fields: [assignedUserId], references: [id])
+  currentAgent AiAgent?          @relation(fields: [currentAgentId], references: [id])
+  
+  // WhatsApp entities
+  messages WhatsAppMessage[]
+
+  @@unique([instanceId, remoteJid])
+  @@map("whatsapp_conversations")
+}
+
+model WhatsAppMessage {
+  id               String                 @id @default(cuid())
+  instanceId       String                 // Referência à instância
+  conversationId   String                 // Referência à conversa
+  contactId        String                 // Referência ao contato
+  remoteJid        String                 // JID do remetente
+  messageId        String                 // ID único da mensagem no WhatsApp
+  fromMe           Boolean                // Se foi enviada por nós
+  messageType      WhatsAppMessageType    // text, image, audio, video, document, location, sticker
+  content          String?                // Conteúdo textual
+  quotedMessageId  String?                // ID da mensagem citada
+  mediaUrl         String?                // URL do arquivo de mídia
+  mediaSize        Int?                   // Tamanho do arquivo em bytes
+  mimetype         String?                // Tipo MIME do arquivo
+  fileName         String?                // Nome do arquivo
+  caption          String?                // Legenda da mídia
+  location         Json?                  // Dados de localização
+  isForwarded      Boolean                @default(false) // Se é uma mensagem encaminhada
+  timestamp        DateTime               // Timestamp da mensagem
+  status           WhatsAppMessageStatus  @default(SENT) // sent, delivered, read, failed
+  isDeleted        Boolean                @default(false) // Se foi deletada
+  isEdited         Boolean                @default(false) // Se foi editada
+  aiResponse       Boolean                @default(false) // Se foi resposta da IA
+  toolExecutionId  String?                // ID de execução de tool (se aplicável)
+  importedFrom     String?                // 'whatsapp_export' se importada
+  createdAt        DateTime               @default(now())
+  updatedAt        DateTime               @updatedAt
+
+  // Relacionamentos
+  instance       WhatsAppInstance     @relation(fields: [instanceId], references: [id], onDelete: Cascade)
+  conversation   WhatsAppConversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  contact        WhatsAppContact      @relation(fields: [contactId], references: [id], onDelete: Cascade)
+  toolExecution  ToolExecution?       @relation(fields: [toolExecutionId], references: [id])
+
+  @@unique([instanceId, messageId])
+  @@map("whatsapp_messages")
+}
+
+model WhatsAppImport {
+  id               String                @id @default(cuid())
+  instanceId       String                // Referência à instância
+  contactId        String                // Contato importado
+  fileName         String                // Nome do arquivo ZIP
+  fileSize         Int                   // Tamanho do arquivo
+  totalMessages    Int                   @default(0) // Total de mensagens no arquivo
+  importedMessages Int                   @default(0) // Mensagens importadas com sucesso
+  failedMessages   Int                   @default(0) // Mensagens que falharam
+  mediaFiles       String[]              @default([]) // Lista de arquivos de mídia
+  status           WhatsAppImportStatus  @default(PENDING) // pending, processing, completed, failed
+  errorMessage     String?               // Mensagem de erro (se houver)
+  uploadedById     String                // Usuário que fez upload
+  importedAt       DateTime?             // Quando foi concluída
+  createdAt        DateTime              @default(now())
+  updatedAt        DateTime              @updatedAt
+
+  // Relacionamentos
+  instance   WhatsAppInstance @relation(fields: [instanceId], references: [id], onDelete: Cascade)
+  contact    WhatsAppContact  @relation(fields: [contactId], references: [id], onDelete: Cascade)
+  uploadedBy User             @relation("WhatsAppImportUploadedBy", fields: [uploadedById], references: [id])
+
+  @@map("whatsapp_imports")
+}
+
+// ============================================================================
+// CLIENTES E LEADS
+// ============================================================================
+
+model Client {
+  id          String  @id @default(cuid())
+  name        String?
+  phone       String  @unique
+  email       String?
+  document    String? // CPF/CNPJ
+  notes       String?
+  isLead      Boolean @default(true)
+  dateOfBirth DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relacionamentos
+  officeId String
+  office   Office @relation(fields: [officeId], references: [id])
+
+  conversations Conversation[]
+  documents     Document[]
+  clientTags    ClientTag[]
+
+  // WhatsApp
+  whatsappContacts WhatsAppContact[]
+
+  @@map("clients")
+}
+
+// ============================================================================
+// CONVERSAS E MENSAGENS
+// ============================================================================
+
+model Conversation {
+  id               String             @id @default(cuid())
+  title            String?
+  status           ConversationStatus @default(ACTIVE)
+  lastMessageAt    DateTime?
+  metadata         Json?
+  currentAgentType AgentType?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relacionamentos
+  clientId  String
+  client    Client @relation(fields: [clientId], references: [id])
+  officeId  String
+  office    Office @relation(fields: [officeId], references: [id])
+  createdBy String
+  creator   User   @relation("ConversationCreatedBy", fields: [createdBy], references: [id])
+
+  assignedTo String?
+  assignee   User?   @relation("ConversationAssignedTo", fields: [assignedTo], references: [id])
+
+  whatsappConfigId String?
+  whatsappConfig   WhatsappConfig? @relation(fields: [whatsappConfigId], references: [id])
+
+  messages           Message[]
+  conversationTags   ConversationTag[]
+  conversationStatus ConversationCustomStatus[]
+
+  @@map("conversations")
+}
+
+model Message {
+  id            String      @id @default(cuid())
+  content       String?
+  type          MessageType @default(TEXT)
+  isFromClient  Boolean     @default(true)
+  isFromAI      Boolean     @default(false)
+  metadata      Json?
+  externalId    String? // ID da mensagem no WhatsApp
+  mediaUrl      String?
+  transcription String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relacionamentos
+  conversationId String
+  conversation   Conversation @relation(fields: [conversationId], references: [id])
+
+  userId             String?
+  user               User?            @relation(fields: [userId], references: [id])
+  whatsappConfigId   String?
+  whatsappConfig     WhatsappConfig?  @relation(fields: [whatsappConfigId], references: [id])
+  audioTranscription AudioTranscription?
+
+  @@map("messages")
+}
+
+// ============================================================================
+// TRANSCRIÇÃO DE ÁUDIO
+// ============================================================================
+
+model AudioTranscription {
+  id           String                @id @default(cuid())
+  originalText String?
+  provider     TranscriptionProvider
+  confidence   Float?
+  duration     Float?
+  language     String?
+  metadata     Json?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relacionamentos
+  messageId String  @unique
+  message   Message @relation(fields: [messageId], references: [id])
+
+  @@map("audio_transcriptions")
+}
+
+// ============================================================================
+// SISTEMA DE TAGS
+// ============================================================================
+
+model Tag {
+  id          String  @id @default(cuid())
+  name        String
+  color       String  @default("#3B82F6")
+  description String?
+  isActive    Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relacionamentos
+  officeId String
+  office   Office @relation(fields: [officeId], references: [id])
+
+  clientTags       ClientTag[]
+  conversationTags ConversationTag[]
+
+  @@unique([name, officeId])
+  @@map("tags")
+}
+
+model ClientTag {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+
+  // Relacionamentos
+  clientId String
+  client   Client @relation(fields: [clientId], references: [id])
+  tagId    String
+  tag      Tag    @relation(fields: [tagId], references: [id])
+
+  @@unique([clientId, tagId])
+  @@map("client_tags")
+}
+
+model ConversationTag {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+
+  // Relacionamentos
+  conversationId String
+  conversation   Conversation @relation(fields: [conversationId], references: [id])
+  tagId          String
+  tag            Tag          @relation(fields: [tagId], references: [id])
+
+  @@unique([conversationId, tagId])
+  @@map("conversation_tags")
+}
+
+// ============================================================================
+// STATUS PERSONALIZADOS
+// ============================================================================
+
+model CustomStatus {
+  id          String  @id @default(cuid())
+  name        String
+  color       String  @default("#6B7280")
+  description String?
+  isActive    Boolean @default(true)
+  order       Int     @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relacionamentos
+  officeId String
+  office   Office @relation(fields: [officeId], references: [id])
+
+  conversationStatuses ConversationCustomStatus[]
+
+  @@unique([name, officeId])
+  @@map("custom_statuses")
+}
+
+model ConversationCustomStatus {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+
+  // Relacionamentos
+  conversationId   String
+  conversation     Conversation   @relation(fields: [conversationId], references: [id])
+  customStatusId   String
+  customStatus     CustomStatus   @relation(fields: [customStatusId], references: [id])
+
+  @@unique([conversationId, customStatusId])
+  @@map("conversation_custom_statuses")
+}
+
+// ============================================================================
+// AGENTES DE IA
+// ============================================================================
+
+model AiAgent {
+  id           String    @id @default(cuid())
+  name         String
+  type         AgentType
+  prompt       String    @db.Text
+  model        String    // Agora será dinâmico baseado na configuração
+  provider     AIProvider // Novo campo
+  aiModel      AIModel   // Novo campo  
+  temperature  Float     @default(0.7)
+  maxTokens    Int       @default(1000)
+  isActive     Boolean   @default(true)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  // Relacionamentos
+  office       Office    @relation(fields: [officeId], references: [id], onDelete: Cascade)
+  officeId     String
+
+  // WhatsApp
+  whatsappConversations WhatsAppConversation[]
+
+  @@map("ai_agents")
+}
+
+// Nova tabela para configurações de providers de IA
+model AIProviderConfig {
+  id          String     @id @default(cuid())
+  provider    AIProvider
+  apiKey      String     // Criptografado
+  isActive    Boolean    @default(true)
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  // Relacionamentos  
+  office      Office     @relation(fields: [officeId], references: [id], onDelete: Cascade)
+  officeId    String
+
+  @@unique([officeId, provider])
+  @@map("ai_provider_configs")
+}
+
+// ============================================================================
+// DOCUMENTOS
+// ============================================================================
+
+model Document {
+  id          String  @id @default(cuid())
+  name        String
+  originalName String
+  mimeType    String
+  size        Int
+  url         String
+  description String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relacionamentos
+  clientId String
+  client   Client @relation(fields: [clientId], references: [id])
+  officeId String
+  office   Office @relation(fields: [officeId], references: [id])
+
+  @@map("documents")
+}
+
+// ============================================================================
+// TOOLS E AUTOMAÇÕES
+// ============================================================================
+
+model Tool {
+  id          String   @id @default(cuid())
+  name        String
+  description String   @db.Text // Para IA saber quando usar
+  webhookUrl  String
+  isActive    Boolean  @default(true)
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Relacionamentos
+  officeId    String
+  office      Office   @relation(fields: [officeId], references: [id])
+  createdById String
+  createdBy   User     @relation("ToolCreatedBy", fields: [createdById], references: [id])
+  
+  // Execuções
+  executions  ToolExecution[]
+  
+  @@map("tools")
+}
+
+model ToolExecution {
+  id          String              @id @default(cuid())
+  requestId   String              @unique // Para callback
+  description String              @db.Text // O que foi solicitado
+  status      ToolExecutionStatus @default(PENDING)
+  
+  // Request/Response
+  requestData  Json?
+  responseData Json?
+  errorMessage String?
+  
+  // Timing
+  startedAt   DateTime  @default(now())
+  completedAt DateTime?
+  
+  // Contexto
+  conversationId String?
+  agentId        String?
+  
+  // Relacionamentos
+  toolId String
+  tool   Tool   @relation(fields: [toolId], references: [id])
+
+  // WhatsApp
+  whatsappMessages WhatsAppMessage[]
+  
+  @@map("tool_executions")
+}
+
+// ============================================================================
+// WEBHOOKS E INTEGRAÇÕES
+// ============================================================================
+
+model Webhook {
+  id          String  @id @default(cuid())
+  name        String
+  url         String
+  secret      String?
+  isActive    Boolean @default(true)
+  description String?
+  
+  // Configurações
+  retryCount   Int     @default(3)
+  timeoutMs    Int     @default(30000)
+  headers      Json? // Headers customizados
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relacionamentos
+  officeId String
+  office   Office @relation(fields: [officeId], references: [id])
+
+  executions WebhookExecution[]
+
+  @@map("webhooks")
+}
+
+model WebhookExecution {
+  id           String   @id @default(cuid())
+  status       String   // success, failed, pending
+  requestBody  Json
+  responseBody Json?
+  responseCode Int?
+  executedAt   DateTime @default(now())
+  attempt      Int      @default(1)
+  error        String?
+
+  // Relacionamentos
+  webhookId String
+  webhook   Webhook @relation(fields: [webhookId], references: [id])
+
+  @@map("webhook_executions")
+}
+
+// ============================================================================
+// LOGS E AUDITORIA
+// ============================================================================
+
+model AuditLog {
+  id          String   @id @default(cuid())
+  action      String
+  entityType  String
+  entityId    String
+  oldValues   Json?
+  newValues   Json?
+  ipAddress   String?
+  userAgent   String?
+  
+  createdAt DateTime @default(now())
+
+  // Relacionamentos
+  userId String?
+  user   User?   @relation(fields: [userId], references: [id])
+  officeId String
+  office   Office @relation(fields: [officeId], references: [id])
+
+  @@map("audit_logs")
+}
+
+// ============================================================================
+// CONFIGURAÇÕES GLOBAIS
+// ============================================================================
+
+model GlobalConfig {
+  id    String @id @default(cuid())
+  key   String @unique
+  value Json
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("global_configs")
+}

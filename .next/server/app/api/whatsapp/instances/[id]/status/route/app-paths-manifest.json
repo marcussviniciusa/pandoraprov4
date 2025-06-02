@@ -1,0 +1,3 @@
+{
+  "/api/whatsapp/instances/[id]/status/route": "app/api/whatsapp/instances/[id]/status/route.js"
+}

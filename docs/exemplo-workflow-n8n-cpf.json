@@ -1,0 +1,246 @@
+{
+  "name": "🔍 Pandora Pro - Consulta CPF",
+  "version": 1,
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "consulta-cpf",
+        "responseMode": "responseNode",
+        "responseData": "allEntries"
+      },
+      "id": "webhook-trigger",
+      "name": "📥 Webhook Pandora",
+      "type": "n8n-nodes-base.webhook",
+      "position": [240, 300],
+      "webhookId": "pandora-cpf-webhook"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Extrair CPF da descrição recebida do Pandora Pro\nconst description = $json.description || '';\nconst requestId = $json.requestId;\nconst metadata = $json.metadata || {};\n\n// Regex para encontrar CPF (11 dígitos)\nconst cpfMatch = description.match(/(\\d{11})|(\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2})/);\n\nif (!cpfMatch) {\n  return {\n    error: true,\n    message: 'CPF não encontrado na mensagem',\n    requestId,\n    originalDescription: description\n  };\n}\n\n// Limpar CPF (remover pontos e traços)\nconst cpf = cpfMatch[0].replace(/[^\\d]/g, '');\n\n// Validar CPF básico\nif (cpf.length !== 11) {\n  return {\n    error: true,\n    message: 'CPF deve ter 11 dígitos',\n    requestId,\n    cpf\n  };\n}\n\nreturn {\n  cpf,\n  requestId,\n  metadata,\n  originalDescription: description,\n  extractedAt: new Date().toISOString()\n};"
+      },
+      "id": "extract-cpf",
+      "name": "🔍 Extrair CPF",
+      "type": "n8n-nodes-base.code",
+      "position": [460, 300]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{$json.error}}",
+              "value2": true
+            }
+          ]
+        }
+      },
+      "id": "check-error",
+      "name": "❓ Verificar Erro",
+      "type": "n8n-nodes-base.if",
+      "position": [680, 300]
+    },
+    {
+      "parameters": {
+        "url": "={{$('📥 Webhook Pandora').item.json.metadata.callbackUrl || 'https://pandora-pro.com.br/api/webhooks/callback'}}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "User-Agent",
+              "value": "n8n-pandora-cpf/1.0"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "requestId",
+              "value": "={{$json.requestId}}"
+            },
+            {
+              "name": "success",
+              "value": false
+            },
+            {
+              "name": "error",
+              "value": "={{$json.message}}"
+            },
+            {
+              "name": "metadata",
+              "value": "={{{\n  source: 'n8n-cpf-workflow',\n  executionTime: 0,\n  toolName: 'Consulta CPF',\n  errorType: 'validation'\n}}}"
+            }
+          ]
+        }
+      },
+      "id": "error-callback",
+      "name": "❌ Callback Erro",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [900, 200]
+    },
+    {
+      "parameters": {
+        "url": "https://api.exemplo-consultacpf.com.br/v1/consultar",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer SUA_API_KEY_AQUI"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "cpf",
+              "value": "={{$json.cpf}}"
+            },
+            {
+              "name": "incluir_dados_completos",
+              "value": true
+            }
+          ]
+        }
+      },
+      "id": "consulta-api-cpf",
+      "name": "🌐 Consultar API CPF",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [900, 400]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Processar resposta da API de CPF\nconst apiResponse = $json;\nconst inputData = $('🔍 Extrair CPF').item.json;\n\nconst startTime = new Date(inputData.extractedAt);\nconst endTime = new Date();\nconst executionTime = endTime.getTime() - startTime.getTime();\n\n// Formatar dados para resposta ao Pandora Pro\nconst result = {\n  cpf: inputData.cpf,\n  situacao: apiResponse.situacao || 'Não encontrado',\n  nome: apiResponse.nome || null,\n  nascimento: apiResponse.data_nascimento || null,\n  genero: apiResponse.genero || null,\n  endereco: {\n    logradouro: apiResponse.endereco?.logradouro || null,\n    cidade: apiResponse.endereco?.cidade || null,\n    uf: apiResponse.endereco?.uf || null,\n    cep: apiResponse.endereco?.cep || null\n  },\n  telefones: apiResponse.telefones || [],\n  emails: apiResponse.emails || [],\n  consultadoEm: new Date().toISOString(),\n  fonte: 'API Externa CPF'\n};\n\n// Criar mensagem amigável para o usuário\nlet mensagem = `📋 **Consulta CPF ${inputData.cpf}**\\n\\n`;\n\nif (apiResponse.situacao === 'REGULAR') {\n  mensagem += `✅ **Situação:** ${apiResponse.situacao}\\n`;\n  if (apiResponse.nome) {\n    mensagem += `👤 **Nome:** ${apiResponse.nome}\\n`;\n  }\n  if (apiResponse.data_nascimento) {\n    mensagem += `📅 **Nascimento:** ${apiResponse.data_nascimento}\\n`;\n  }\n  if (apiResponse.endereco?.cidade) {\n    mensagem += `📍 **Cidade:** ${apiResponse.endereco.cidade}/${apiResponse.endereco.uf}\\n`;\n  }\n} else {\n  mensagem += `⚠️ **Situação:** ${apiResponse.situacao || 'Irregular/Não encontrado'}\\n`;\n}\n\nmensagem += `\\n🕐 Consulta realizada em ${new Date().toLocaleString('pt-BR')}`;\n\nreturn {\n  requestId: inputData.requestId,\n  success: true,\n  result: {\n    dados: result,\n    mensagem,\n    tipo: 'consulta_cpf'\n  },\n  metadata: {\n    source: 'n8n-cpf-workflow',\n    executionTime,\n    toolName: 'Consulta CPF',\n    cpfConsultado: inputData.cpf\n  }\n};"
+      },
+      "id": "format-response",
+      "name": "📝 Formatar Resposta",
+      "type": "n8n-nodes-base.code",
+      "position": [1120, 400]
+    },
+    {
+      "parameters": {
+        "url": "={{$('📥 Webhook Pandora').item.json.metadata.callbackUrl || 'https://pandora-pro.com.br/api/webhooks/callback'}}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "User-Agent",
+              "value": "n8n-pandora-cpf/1.0"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "requestId",
+              "value": "={{$json.requestId}}"
+            },
+            {
+              "name": "success",
+              "value": "={{$json.success}}"
+            },
+            {
+              "name": "result",
+              "value": "={{$json.result}}"
+            },
+            {
+              "name": "metadata",
+              "value": "={{$json.metadata}}"
+            }
+          ]
+        }
+      },
+      "id": "success-callback",
+      "name": "✅ Callback Sucesso",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [1340, 400]
+    }
+  ],
+  "connections": {
+    "📥 Webhook Pandora": {
+      "main": [
+        [
+          {
+            "node": "🔍 Extrair CPF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "🔍 Extrair CPF": {
+      "main": [
+        [
+          {
+            "node": "❓ Verificar Erro",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "❓ Verificar Erro": {
+      "main": [
+        [
+          {
+            "node": "❌ Callback Erro",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "🌐 Consultar API CPF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "🌐 Consultar API CPF": {
+      "main": [
+        [
+          {
+            "node": "📝 Formatar Resposta",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "📝 Formatar Resposta": {
+      "main": [
+        [
+          {
+            "node": "✅ Callback Sucesso",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "description": "Workflow do Pandora Pro para consulta automática de CPF via API externa. Recebe solicitação do sistema de IA, extrai o CPF, consulta API externa e retorna dados formatados.",
+    "tags": ["pandora-pro", "cpf", "consulta", "juridico", "automacao"]
+  }
+} 
