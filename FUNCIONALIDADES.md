@@ -88,21 +88,21 @@
   - [x] Documentação OpenAPI automática
 
 ## 📱 Integração WhatsApp + Evolution API
-- [ ] **Gerenciamento de Instâncias**
-  - [ ] Criação e configuração de instâncias WhatsApp
-  - [ ] Conexão via QR Code no painel admin
-  - [ ] Status de conexão em tempo real
-  - [ ] Desconexão/reconexão automática
-  - [ ] Múltiplas instâncias por escritório
-  - [ ] Webhook configuration automática
+- [x] **Gerenciamento de Instâncias**
+  - [x] Criação e configuração de instâncias WhatsApp
+  - [x] Conexão via QR Code no painel admin
+  - [x] Status de conexão em tempo real
+  - [x] Desconexão/reconexão automática
+  - [x] Múltiplas instâncias por escritório
+  - [x] Webhook configuration automática
   
-- [ ] **Sistema de Conversas**
-  - [ ] Recebimento de mensagens via webhook
-  - [ ] Armazenamento estruturado de conversas
-  - [ ] Gestão de contatos e grupos
-  - [ ] Interface de chat administrativa
-  - [ ] Status de mensagens (entregue, lida, enviada)
-  - [ ] Suporte a mídia (imagem, áudio, vídeo, documento)
+- [x] **Sistema de Conversas**
+  - [x] Recebimento de mensagens via webhook
+  - [x] Armazenamento estruturado de conversas
+  - [x] Gestão de contatos e grupos
+  - [x] Interface de chat administrativa
+  - [x] Status de mensagens (entregue, lida, enviada)
+  - [x] Suporte a mídia (imagem, áudio, vídeo, documento)
   
 - [ ] **Importação de Histórico WhatsApp**
   - [ ] Upload de arquivo ZIP exportado do WhatsApp
@@ -120,11 +120,11 @@
   - [ ] Configuração de IA por conversa
   - [ ] Métricas de performance da IA
   
-- [ ] **Interface Administrativa WhatsApp**
-  - [ ] Dashboard de instâncias com status
+- [x] **Interface Administrativa WhatsApp**
+  - [x] Dashboard de instâncias com status
   - [ ] Gerenciador de conversas em tempo real
   - [ ] Dialog de importação de histórico
-  - [ ] Configurações por instância/conversa
+  - [x] Configurações por instância/conversa
   - [ ] Analytics de mensagens e respostas
   - [ ] Sistema de atribuição de responsáveis
 

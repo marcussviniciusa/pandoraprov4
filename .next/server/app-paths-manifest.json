@@ -1,11 +1,14 @@
 {
   "/admin/page": "app/admin/page.js",
+  "/admin/whatsapp/conversations/page": "app/admin/whatsapp/conversations/page.js",
   "/admin/whatsapp/page": "app/admin/whatsapp/page.js",
   "/api/auth/[...nextauth]/route": "app/api/auth/[...nextauth]/route.js",
+  "/api/whatsapp/conversations/[id]/mark-read/route": "app/api/whatsapp/conversations/[id]/mark-read/route.js",
+  "/api/whatsapp/conversations/[id]/messages/route": "app/api/whatsapp/conversations/[id]/messages/route.js",
+  "/api/whatsapp/conversations/route": "app/api/whatsapp/conversations/route.js",
   "/api/whatsapp/health/route": "app/api/whatsapp/health/route.js",
-  "/api/whatsapp/instances/[id]/qr/route": "app/api/whatsapp/instances/[id]/qr/route.js",
-  "/api/whatsapp/instances/[id]/route": "app/api/whatsapp/instances/[id]/route.js",
-  "/api/whatsapp/instances/[id]/status/route": "app/api/whatsapp/instances/[id]/status/route.js",
+  "/api/whatsapp/instances/[id]/send-message/route": "app/api/whatsapp/instances/[id]/send-message/route.js",
   "/api/whatsapp/instances/route": "app/api/whatsapp/instances/route.js",
+  "/login/page": "app/login/page.js",
   "/page": "app/page.js"
 }

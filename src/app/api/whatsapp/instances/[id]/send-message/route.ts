@@ -80,10 +80,9 @@ export async function POST(request: NextRequest, { params }: Params) {
 
     // Enviar mensagem via Evolution API
     const evolutionClient = getEvolutionAPIClient()
-    const sendResponse = await evolutionClient.sendMessage(instance.name, {
+    const sendResponse = await evolutionClient.sendTextMessage(instance.name, {
       number: phoneNumber,
-      text: message,
-      type: messageType
+      text: message
     })
 
     if (!sendResponse.success) {
@@ -99,11 +98,37 @@ export async function POST(request: NextRequest, { params }: Params) {
 
     // Salvar mensagem no banco de dados
     try {
+      // Buscar ou criar contato
+      const remoteJid = formatPhoneToJid(phoneNumber)
+      
+      let contact = await prisma.whatsAppContact.findFirst({
+        where: {
+          instanceId: instance.id,
+          OR: [
+            { remoteJid },
+            { phoneNumber }
+          ]
+        }
+      })
+
+      if (!contact) {
+        contact = await prisma.whatsAppContact.create({
+          data: {
+            id: generateId(),
+            instanceId: instance.id,
+            remoteJid,
+            phoneNumber,
+            name: phoneNumber, // Será atualizado quando soubermos o nome
+            isGroup: false
+          }
+        })
+      }
+
       // Buscar ou criar conversa
       let conversation = await prisma.whatsAppConversation.findFirst({
         where: {
           instanceId: instance.id,
-          phoneNumber
+          remoteJid
         }
       })
 
@@ -112,11 +137,12 @@ export async function POST(request: NextRequest, { params }: Params) {
           data: {
             id: generateId(),
             instanceId: instance.id,
-            phoneNumber,
-            contactName: phoneNumber, // Será atualizado quando soubermos o nome
-            lastMessage: message,
+            contactId: contact.id,
+            remoteJid,
+            title: contact.name || contact.pushName || phoneNumber,
+            isGroup: false,
             lastMessageAt: new Date(),
-            isActive: true
+            status: 'OPEN'
           }
         })
       }
@@ -125,16 +151,16 @@ export async function POST(request: NextRequest, { params }: Params) {
       await prisma.whatsAppMessage.create({
         data: {
           id: generateId(),
-          conversationId: conversation.id,
           instanceId: instance.id,
-          messageId: sendResponse.data?.messageId || generateId(),
+          conversationId: conversation.id,
+          contactId: contact.id,
+          remoteJid,
+          messageId: sendResponse.data?.key?.id || generateId(),
           fromMe: true,
-          phoneNumber,
-          message,
-          messageType,
-          status: 'SENT',
+          messageType: 'TEXT',
+          content: message,
           timestamp: new Date(),
-          metadata: sendResponse.data as any
+          status: 'SENT'
         }
       })
 
@@ -142,9 +168,8 @@ export async function POST(request: NextRequest, { params }: Params) {
       await prisma.whatsAppConversation.update({
         where: { id: conversation.id },
         data: {
-          lastMessage: message,
           lastMessageAt: new Date(),
-          messageCount: { increment: 1 }
+          unreadCount: 0 // Reset pois é mensagem nossa
         }
       })
 
@@ -155,7 +180,7 @@ export async function POST(request: NextRequest, { params }: Params) {
 
     return NextResponse.json({
       message: 'Mensagem enviada com sucesso',
-      messageId: sendResponse.data?.messageId,
+      messageId: sendResponse.data?.key?.id,
       phoneNumber,
       sentAt: new Date().toISOString()
     })

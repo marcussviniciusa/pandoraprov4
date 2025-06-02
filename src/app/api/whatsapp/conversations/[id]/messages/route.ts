@@ -8,9 +8,9 @@ import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 
 interface Params {
-  params: {
+  params: Promise<{
     id: string
-  }
+  }>
 }
 
 // ============================================================================
@@ -18,6 +18,7 @@ interface Params {
 // ============================================================================
 export async function GET(request: NextRequest, { params }: Params) {
   try {
+    const { id } = await params
     const session = await getServerSession(authOptions)
     
     if (!session?.user?.officeId) {
@@ -28,33 +29,19 @@ export async function GET(request: NextRequest, { params }: Params) {
     }
 
     const { searchParams } = new URL(request.url)
-    const page = parseInt(searchParams.get('page') || '1')
-    const limit = parseInt(searchParams.get('limit') || '50')
-    const before = searchParams.get('before') // timestamp ISO para paginação
+    const limit = parseInt(searchParams.get('limit') || '20') // Reduzido para carregamento mais rápido
+    const before = searchParams.get('before')
     const after = searchParams.get('after')
-    const messageType = searchParams.get('messageType')
-    const fromMe = searchParams.get('fromMe')
 
-    // Verificar se conversa existe e pertence ao escritório
-    const conversation = await prisma.whatsAppConversation.findFirst({
-      where: {
-        id: params.id,
+    // Construir filtros otimizados
+    const where: any = {
+      conversationId: id,
+      // Garantir que conversa pertence ao escritório via join direto
+      conversation: {
         instance: {
           officeId: session.user.officeId
         }
       }
-    })
-
-    if (!conversation) {
-      return NextResponse.json(
-        { error: 'Conversa não encontrada' },
-        { status: 404 }
-      )
-    }
-
-    // Construir filtros
-    const where: any = {
-      conversationId: params.id
     }
 
     if (before) {
@@ -65,60 +52,48 @@ export async function GET(request: NextRequest, { params }: Params) {
       where.timestamp = { gt: new Date(after) }
     }
 
-    if (messageType) {
-      where.messageType = messageType
-    }
-
-    if (fromMe !== null && fromMe !== undefined) {
-      where.fromMe = fromMe === 'true'
-    }
-
-    const [messages, total] = await Promise.all([
-      prisma.whatsAppMessage.findMany({
-        where,
-        include: {
-          contact: {
-            select: {
-              id: true,
-              name: true,
-              pushName: true,
-              phoneNumber: true,
-              profilePicUrl: true
-            }
-          },
-          toolExecution: {
-            select: {
-              id: true,
-              description: true,
-              status: true,
-              responseData: true
-            }
+    // Query otimizada - apenas uma query, campos mínimos
+    const messages = await prisma.whatsAppMessage.findMany({
+      where,
+      select: {
+        id: true,
+        content: true,
+        messageType: true,
+        fromMe: true,
+        timestamp: true,
+        status: true,
+        mediaUrl: true,
+        mimetype: true,
+        fileName: true,
+        // Apenas campos essenciais do contact
+        contact: {
+          select: {
+            id: true,
+            name: true,
+            pushName: true,
+            phoneNumber: true,
+            profilePicUrl: true
           }
         },
-        orderBy: { timestamp: 'desc' },
-        skip: (page - 1) * limit,
-        take: limit
-      }),
-      prisma.whatsAppMessage.count({ where })
-    ])
+        // ToolExecution apenas se existir
+        toolExecution: {
+          select: {
+            id: true,
+            description: true,
+            status: true
+          }
+        }
+      },
+      orderBy: { timestamp: 'desc' },
+      take: limit
+    })
 
     // Reverter ordem para mostrar mensagens mais antigas primeiro
     const orderedMessages = messages.reverse()
 
     return NextResponse.json({
       messages: orderedMessages,
-      pagination: {
-        page,
-        limit,
-        total,
-        pages: Math.ceil(total / limit),
-        hasMore: total > page * limit
-      },
-      conversation: {
-        id: conversation.id,
-        unreadCount: conversation.unreadCount,
-        lastMessageAt: conversation.lastMessageAt
-      }
+      hasMore: messages.length === limit // Verificação simples se tem mais
     })
 
   } catch (error) {

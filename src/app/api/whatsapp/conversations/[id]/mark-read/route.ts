@@ -9,9 +9,9 @@ import { prisma } from '@/lib/prisma'
 import { getEvolutionAPIClient } from '@/lib/evolution-api'
 
 interface Params {
-  params: {
+  params: Promise<{
     id: string
-  }
+  }>
 }
 
 // ============================================================================
@@ -19,6 +19,7 @@ interface Params {
 // ============================================================================
 export async function POST(request: NextRequest, { params }: Params) {
   try {
+    const { id } = await params
     const session = await getServerSession(authOptions)
     
     if (!session?.user?.officeId) {
@@ -28,13 +29,20 @@ export async function POST(request: NextRequest, { params }: Params) {
       )
     }
 
-    const body = await request.json()
-    const { messageId } = body // ID específico da mensagem ou todas se não fornecido
+    // Parse JSON opcional - pode não ter body
+    let messageId: string | undefined
+    try {
+      const body = await request.json()
+      messageId = body?.messageId
+    } catch {
+      // Sem body JSON, marcar todas as mensagens como lidas
+      messageId = undefined
+    }
 
     // Verificar se conversa existe e pertence ao escritório
     const conversation = await prisma.whatsAppConversation.findFirst({
       where: {
-        id: params.id,
+        id,
         instance: {
           officeId: session.user.officeId
         }
@@ -62,7 +70,7 @@ export async function POST(request: NextRequest, { params }: Params) {
       const message = await prisma.whatsAppMessage.findFirst({
         where: {
           id: messageId,
-          conversationId: params.id,
+          conversationId: id,
           fromMe: false // Só podemos marcar como lida mensagens que recebemos
         }
       })
@@ -99,7 +107,7 @@ export async function POST(request: NextRequest, { params }: Params) {
       // Marcar todas as mensagens não lidas da conversa como lidas
       const unreadMessages = await prisma.whatsAppMessage.findMany({
         where: {
-          conversationId: params.id,
+          conversationId: id,
           fromMe: false,
           status: { not: 'READ' }
         },
@@ -127,7 +135,7 @@ export async function POST(request: NextRequest, { params }: Params) {
       // Atualizar todas as mensagens não lidas no banco
       await prisma.whatsAppMessage.updateMany({
         where: {
-          conversationId: params.id,
+          conversationId: id,
           fromMe: false,
           status: { not: 'READ' }
         },
@@ -137,7 +145,7 @@ export async function POST(request: NextRequest, { params }: Params) {
 
     // Atualizar contador de não lidas da conversa
     await prisma.whatsAppConversation.update({
-      where: { id: params.id },
+      where: { id },
       data: {
         unreadCount: 0,
         updatedAt: new Date()
@@ -146,7 +154,7 @@ export async function POST(request: NextRequest, { params }: Params) {
 
     return NextResponse.json({
       message: 'Mensagens marcadas como lidas com sucesso',
-      conversationId: params.id,
+      conversationId: id,
       markedAt: new Date().toISOString()
     })
 

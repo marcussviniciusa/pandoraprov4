@@ -340,17 +340,32 @@ export default function WhatsAppPage() {
     <AuthGuard requiredRole="ADMIN">
       <div className="space-y-6">
         {/* Header */}
-        <div className="flex justify-between items-center">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
           <div>
             <h1 className="text-3xl font-bold tracking-tight">WhatsApp</h1>
-            <p className="text-muted-foreground mt-2">
-              Gerencie suas instâncias e integrações WhatsApp
+            <p className="text-muted-foreground mt-1">
+              Gerencie suas instâncias WhatsApp e conversas
             </p>
           </div>
-          <Button onClick={() => setIsCreateOpen(true)}>
-            <Plus className="w-4 h-4 mr-2" />
-            Nova Instância
-          </Button>
+          
+          <div className="flex flex-col sm:flex-row gap-2">
+            <Button 
+              variant="outline"
+              onClick={() => window.location.href = '/admin/whatsapp/conversations'}
+              className="flex items-center gap-2"
+            >
+              <MessageSquare className="w-4 h-4" />
+              Conversas
+            </Button>
+            
+            <Button 
+              onClick={() => setIsCreateOpen(true)}
+              className="flex items-center gap-2"
+            >
+              <Plus className="w-4 h-4" />
+              Nova Instância
+            </Button>
+          </div>
         </div>
 
         {/* Evolution API Status */}
