@@ -95,6 +95,7 @@ export interface SendMediaMessageRequest {
   number: string
   mediatype: 'image' | 'video' | 'audio' | 'document'
   media: string // URL or base64
+  mimetype?: string // MIME type do arquivo (para URLs)
   caption?: string
   fileName?: string
   delay?: number
@@ -381,4 +382,13 @@ export interface EvolutionAPIResponse<T = any> {
   success: boolean
   data?: T
   error?: EvolutionAPIError
+}
+
+export interface SendWhatsAppAudioRequest {
+  number: string
+  audio: string // base64 string
+  delay?: number
+  quoted?: {
+    key: MessageKey
+  }
 } 

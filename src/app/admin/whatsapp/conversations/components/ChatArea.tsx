@@ -5,6 +5,9 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { ScrollArea } from '@/components/ui/scroll-area'
+import { AudioRecorder } from '@/components/ui/audio-recorder'
+import { AudioPlayer } from '@/components/ui/audio-player'
+import { MediaUploader } from '@/components/ui/media-uploader'
 import { 
   Send,
   Paperclip,
@@ -19,7 +22,9 @@ import {
   Pause,
   MessageSquare,
   Bot,
-  AlertCircle
+  AlertCircle,
+  Mic,
+  X
 } from 'lucide-react'
 import { formatDistanceToNow } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
@@ -80,7 +85,16 @@ interface ChatAreaProps {
   conversation: WhatsAppConversation
   messages: WhatsAppMessage[]
   isLoading: boolean
-  onSendMessage: (content: string, conversationId: string) => void
+  onSendMessage: (
+    data: {
+      content?: string
+      messageType: 'text' | 'image' | 'video' | 'audio' | 'document'
+      mediaData?: string
+      fileName?: string
+      caption?: string
+    },
+    conversationId: string
+  ) => void
   onLoadMore: () => void
 }
 
@@ -93,8 +107,10 @@ export function ChatArea({
 }: ChatAreaProps) {
   const [newMessage, setNewMessage] = useState('')
   const [isSending, setIsSending] = useState(false)
+  const [inputMode, setInputMode] = useState<'text' | 'media' | 'audio'>('text')
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const scrollAreaRef = useRef<HTMLDivElement>(null)
+  const inputRef = useRef<HTMLInputElement>(null)
 
   // Auto-scroll para a última mensagem
   useEffect(() => {
@@ -105,6 +121,48 @@ export function ChatArea({
       })
     }
   }, [messages])
+
+  // Auto-focus no input quando conversa muda ou componente é montado
+  useEffect(() => {
+    const focusInput = () => {
+      if (inputRef.current && conversation.instance.status === 'CONNECTED') {
+        inputRef.current.focus()
+      }
+    }
+    
+    // Focus imediato
+    focusInput()
+    
+    // Focus após um pequeno delay para garantir que o componente esteja totalmente renderizado
+    const timeoutId = setTimeout(focusInput, 100)
+    
+    return () => clearTimeout(timeoutId)
+  }, [conversation.id, conversation.instance.status])
+
+  // Manter foco no input após mudanças de estado de envio
+  useEffect(() => {
+    if (!isSending && conversation.instance.status === 'CONNECTED') {
+      // Delay maior para garantir que o DOM foi atualizado
+      const timeoutId = setTimeout(() => {
+        if (inputRef.current) {
+          inputRef.current.focus()
+        }
+      }, 200)
+      
+      return () => clearTimeout(timeoutId)
+    }
+  }, [isSending, conversation.instance.status])
+
+  // Garantir foco após scroll para baixo
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      if (inputRef.current && conversation.instance.status === 'CONNECTED') {
+        inputRef.current.focus()
+      }
+    }, 300)
+    
+    return () => clearTimeout(timeoutId)
+  }, [messages.length])
 
   // Scroll imediato após enviar mensagem
   const scrollToBottom = () => {
@@ -121,23 +179,207 @@ export function ChatArea({
   const handleSendMessage = async () => {
     if (!newMessage.trim() || isSending) return
     
+    const messageToSend = newMessage.trim()
     setIsSending(true)
+    
     try {
-      await onSendMessage(newMessage.trim(), conversation.id)
+      // Limpar input imediatamente para UX mais fluida
       setNewMessage('')
+      
+      await onSendMessage(
+        {
+          content: messageToSend,
+          messageType: 'text',
+          mediaData: undefined,
+          fileName: undefined,
+          caption: undefined
+        },
+        conversation.id
+      )
       scrollToBottom()
+      
+      // Múltiplas tentativas de manter foco com delays diferentes
+      setTimeout(() => {
+        if (inputRef.current) {
+          inputRef.current.focus()
+        }
+      }, 50)
+      
+      setTimeout(() => {
+        if (inputRef.current) {
+          inputRef.current.focus()
+        }
+      }, 150)
+      
+      setTimeout(() => {
+        if (inputRef.current) {
+          inputRef.current.focus()
+        }
+      }, 300)
+      
     } catch (error) {
       console.error('Erro ao enviar mensagem:', error)
+      // Restaurar mensagem em caso de erro
+      setNewMessage(messageToSend)
+      // Manter foco mesmo em caso de erro
+      setTimeout(() => {
+        if (inputRef.current) {
+          inputRef.current.focus()
+        }
+      }, 100)
     } finally {
       setIsSending(false)
     }
   }
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault()
-      handleSendMessage()
+    if (e.key === 'Enter') {
+      if (e.shiftKey) {
+        // Shift+Enter = nova linha (comportamento padrão do textarea)
+        return
+      } else {
+        // Enter = enviar mensagem
+        e.preventDefault()
+        handleSendMessage()
+      }
     }
+  }
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    // Esc = limpar input
+    if (e.key === 'Escape') {
+      setNewMessage('')
+      e.preventDefault()
+    }
+    
+    // Ctrl/Cmd + A = selecionar tudo no input
+    if ((e.ctrlKey || e.metaKey) && e.key === 'a') {
+      e.stopPropagation() // Previne seleção de toda a página
+    }
+  }
+
+  const handleInputClick = () => {
+    // Garantir foco ao clicar
+    if (inputRef.current) {
+      inputRef.current.focus()
+    }
+  }
+
+  // Função para garantir foco quando necessário
+  const ensureFocus = () => {
+    if (inputRef.current && conversation.instance.status === 'CONNECTED') {
+      setTimeout(() => {
+        if (inputRef.current) {
+          inputRef.current.focus()
+        }
+      }, 50)
+    }
+  }
+
+  // Função para envio de mídia
+  const handleMediaSend = async (mediaData: string, fileName: string, mediaType: string, caption?: string) => {
+    setIsSending(true)
+    
+    try {
+      await onSendMessage(
+        {
+          content: caption,
+          messageType: mediaType as 'image' | 'video' | 'audio' | 'document',
+          mediaData,
+          fileName,
+          caption
+        },
+        conversation.id
+      )
+      
+      setInputMode('text')
+      scrollToBottom()
+      
+      // Manter foco no input após envio
+      setTimeout(() => {
+        if (inputRef.current) {
+          inputRef.current.focus()
+        }
+      }, 300)
+      
+    } catch (error) {
+      console.error('Erro ao enviar mídia:', error)
+    } finally {
+      setIsSending(false)
+    }
+  }
+
+  // Função para envio de áudio
+  const handleAudioSend = async (audioBlob: Blob, duration: number) => {
+    setIsSending(true)
+    
+    try {
+      console.log('🎵 Iniciando envio de áudio:', {
+        blobSize: audioBlob.size,
+        blobType: audioBlob.type,
+        duration: duration
+      })
+      
+      // Converter áudio para base64
+      const reader = new FileReader()
+      reader.onloadend = async () => {
+        const base64 = reader.result as string
+        
+        console.log('🎵 Áudio convertido para base64:', {
+          base64Length: base64.length,
+          base64Start: base64.substring(0, 100),
+          mimeType: base64.split(',')[0],
+          audioType: audioBlob.type
+        })
+        
+        // Gerar nome do arquivo baseado no tipo e duração
+        const fileExtension = audioBlob.type.includes('ogg') ? 'ogg' : 'webm'
+        const fileName = `audio_${Date.now()}.${fileExtension}`
+        const durationFormatted = `${Math.floor(duration / 60)}:${(duration % 60).toString().padStart(2, '0')}`
+        
+        await onSendMessage(
+          {
+            content: `🎵 Áudio - ${durationFormatted}`,
+            messageType: 'audio',
+            mediaData: base64,
+            fileName,
+            caption: `Áudio - ${durationFormatted}`
+          },
+          conversation.id
+        )
+        
+        setInputMode('text')
+        scrollToBottom()
+        
+        // Manter foco no input após envio
+        setTimeout(() => {
+          if (inputRef.current) {
+            inputRef.current.focus()
+          }
+        }, 300)
+      }
+      
+      reader.onerror = (error) => {
+        console.error('❌ Erro ao converter áudio para base64:', error)
+      }
+      
+      reader.readAsDataURL(audioBlob)
+      
+    } catch (error) {
+      console.error('Erro ao enviar áudio:', error)
+    } finally {
+      setIsSending(false)
+    }
+  }
+
+  // Função para cancelar modo de mídia/áudio
+  const handleCancelMode = () => {
+    setInputMode('text')
+    setTimeout(() => {
+      if (inputRef.current) {
+        inputRef.current.focus()
+      }
+    }, 100)
   }
 
   const getMessageStatusIcon = (status: string) => {
@@ -218,17 +460,12 @@ export function ChatArea({
       
       case 'AUDIO':
         return (
-          <div className="flex items-center space-x-3 bg-gray-100 rounded-lg p-3 max-w-sm">
-            <Button variant="ghost" size="sm" disabled>
-              <Play className="w-4 h-4" />
-            </Button>
-            <div className="flex-1">
-              <div className="h-1 bg-gray-300 rounded-full">
-                <div className="h-1 bg-green-500 rounded-full w-0"></div>
-              </div>
-            </div>
-            <span className="text-xs text-gray-500">0:00</span>
-          </div>
+          <AudioPlayer
+            audioUrl={message.mediaUrl}
+            fileName={message.fileName}
+            caption={message.content}
+            isFromMe={message.fromMe}
+          />
         )
       
       case 'VIDEO':
@@ -306,6 +543,13 @@ export function ChatArea({
       
       default:
         return <p className="text-sm whitespace-pre-wrap">{message.content}</p>
+    }
+  }
+
+  // Função para focar no input (pode ser chamada externamente)
+  const focusInput = () => {
+    if (inputRef.current) {
+      inputRef.current.focus()
     }
   }
 
@@ -422,48 +666,152 @@ export function ChatArea({
 
       {/* Área de Input */}
       <div className="bg-white border-t p-4 flex-shrink-0">
-        <div className="flex items-center space-x-2">
-          {/* Botão de anexos */}
-          <Button variant="ghost" size="sm" disabled>
-            <Paperclip className="w-4 h-4" />
-          </Button>
-
-          {/* Input de mensagem */}
-          <div className="flex-1 relative">
-            <Input
-              placeholder="Digite uma mensagem..."
-              value={newMessage}
-              onChange={(e) => setNewMessage(e.target.value)}
-              onKeyPress={handleKeyPress}
-              disabled={isSending || conversation.instance.status !== 'CONNECTED'}
-              className="pr-10"
+        {/* Componentes especiais para mídia e áudio */}
+        {inputMode === 'media' && (
+          <div className="mb-4">
+            <MediaUploader
+              onMediaReady={handleMediaSend}
+              onCancel={handleCancelMode}
             />
-            
-            {/* Botão de emoji */}
+          </div>
+        )}
+        
+        {inputMode === 'audio' && (
+          <div className="mb-4">
+            <AudioRecorder
+              onAudioReady={handleAudioSend}
+              onCancel={handleCancelMode}
+            />
+          </div>
+        )}
+
+        {/* Barra de input principal */}
+        {inputMode === 'text' && (
+          <div className="flex items-center space-x-2">
+            {/* Botão de mídia */}
             <Button 
               variant="ghost" 
               size="sm" 
-              className="absolute right-2 top-1/2 transform -translate-y-1/2"
-              disabled
+              onClick={() => setInputMode('media')}
+              disabled={isSending || conversation.instance.status !== 'CONNECTED'}
+              className="text-gray-500 hover:text-gray-700"
             >
-              <Smile className="w-4 h-4" />
+              <Paperclip className="w-4 h-4" />
+            </Button>
+
+            {/* Input de mensagem */}
+            <div className="flex-1 relative">
+              <Input
+                placeholder={
+                  conversation.instance.status === 'CONNECTED' 
+                    ? "Digite uma mensagem..." 
+                    : "Instância desconectada..."
+                }
+                value={newMessage}
+                onChange={(e) => setNewMessage(e.target.value)}
+                onKeyPress={handleKeyPress}
+                onKeyDown={handleKeyDown}
+                onClick={handleInputClick}
+                onBlur={ensureFocus}
+                disabled={isSending || conversation.instance.status !== 'CONNECTED'}
+                className={`pr-20 transition-all duration-200 ${
+                  isSending ? 'opacity-75' : ''
+                } ${
+                  conversation.instance.status !== 'CONNECTED' 
+                    ? 'bg-gray-50 text-gray-400' 
+                    : 'bg-white'
+                }`}
+                ref={inputRef}
+                autoComplete="off"
+                spellCheck={false}
+                autoFocus={conversation.instance.status === 'CONNECTED'}
+              />
+              
+              {/* Botão de emoji */}
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                className="absolute right-12 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                disabled
+              >
+                <Smile className="w-4 h-4" />
+              </Button>
+
+              {/* Indicador de digitação */}
+              {isSending && (
+                <div className="absolute right-2 top-1/2 transform -translate-y-1/2">
+                  <div className="flex space-x-1">
+                    <div className="w-1 h-1 bg-green-500 rounded-full animate-bounce"></div>
+                    <div className="w-1 h-1 bg-green-500 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
+                    <div className="w-1 h-1 bg-green-500 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Botão de áudio */}
+            <Button
+              onClick={() => setInputMode('audio')}
+              disabled={isSending || conversation.instance.status !== 'CONNECTED'}
+              size="sm"
+              variant="ghost"
+              className="text-gray-500 hover:text-gray-700"
+            >
+              <Mic className="w-4 h-4" />
+            </Button>
+
+            {/* Botão de enviar */}
+            <Button
+              onClick={handleSendMessage}
+              disabled={!newMessage.trim() || isSending || conversation.instance.status !== 'CONNECTED'}
+              size="sm"
+              className={`transition-all duration-200 ${
+                newMessage.trim() && !isSending && conversation.instance.status === 'CONNECTED'
+                  ? 'bg-green-500 hover:bg-green-600 text-white' 
+                  : 'bg-gray-100 text-gray-400'
+              }`}
+            >
+              {isSending ? (
+                <div className="w-4 h-4 border-2 border-gray-300 border-t-white rounded-full animate-spin"></div>
+              ) : (
+                <Send className="w-4 h-4" />
+              )}
             </Button>
           </div>
+        )}
 
-          {/* Botão de enviar */}
-          <Button
-            onClick={handleSendMessage}
-            disabled={!newMessage.trim() || isSending || conversation.instance.status !== 'CONNECTED'}
-            size="sm"
-          >
-            <Send className="w-4 h-4" />
-          </Button>
-        </div>
+        {/* Barra de controle para modos especiais */}
+        {inputMode !== 'text' && (
+          <div className="flex items-center justify-between mt-3 p-2 bg-gray-50 rounded-lg">
+            <div className="flex items-center space-x-2">
+              <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+              <span className="text-sm text-gray-600">
+                {inputMode === 'media' ? 'Modo de envio de arquivo' : 'Modo de gravação de áudio'}
+              </span>
+            </div>
+            <Button
+              onClick={handleCancelMode}
+              size="sm"
+              variant="ghost"
+              className="text-gray-500 hover:text-gray-700"
+            >
+              <X className="w-4 h-4" />
+            </Button>
+          </div>
+        )}
 
         {/* Aviso se instância desconectada */}
         {conversation.instance.status !== 'CONNECTED' && (
-          <div className="mt-2 p-2 bg-yellow-50 border border-yellow-200 rounded text-sm text-yellow-700">
-            ⚠️ Instância WhatsApp desconectada. Não é possível enviar mensagens.
+          <div className="mt-3 p-3 bg-yellow-50 border border-yellow-200 rounded-lg text-sm text-yellow-700 flex items-center space-x-2">
+            <div className="w-2 h-2 bg-yellow-500 rounded-full"></div>
+            <span>Instância WhatsApp desconectada. Não é possível enviar mensagens.</span>
+          </div>
+        )}
+
+        {/* Dica de uso */}
+        {conversation.instance.status === 'CONNECTED' && messages.length === 0 && inputMode === 'text' && (
+          <div className="mt-2 text-xs text-gray-500 text-center">
+            Pressione Enter para enviar • 📎 para arquivos • 🎤 para áudio
           </div>
         )}
       </div>

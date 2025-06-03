@@ -9018,6 +9018,15 @@ class EvolutionAPIClient {
     async makeRequest(endpoint, options = {}) {
         try {
             const url = `${this.baseUrl}${endpoint}`;
+            console.log('🌐 Evolution API Request:', {
+                url,
+                method: options.method || 'GET',
+                hasBody: !!options.body,
+                headers: {
+                    ...this.defaultHeaders,
+                    ...options.headers
+                }
+            });
             const controller = new AbortController();
             const timeoutId = setTimeout(()=>controller.abort(), 10000);
             const response = await fetch(url, {
@@ -9029,7 +9038,23 @@ class EvolutionAPIClient {
                 signal: controller.signal
             });
             clearTimeout(timeoutId);
-            const data = await response.json();
+            let data;
+            const contentType = response.headers.get('content-type');
+            if (contentType && contentType.includes('application/json')) {
+                data = await response.json();
+            } else {
+                const textData = await response.text();
+                console.log('⚠️ Evolution API resposta não-JSON:', textData);
+                data = {
+                    message: textData
+                };
+            }
+            console.log('📡 Evolution API Response:', {
+                status: response.status,
+                ok: response.ok,
+                contentType,
+                data: JSON.stringify(data).substring(0, 200) + (JSON.stringify(data).length > 200 ? '...' : '')
+            });
             if (!response.ok) {
                 return {
                     success: false,
@@ -9045,7 +9070,7 @@ class EvolutionAPIClient {
                 data
             };
         } catch (error) {
-            console.error('Evolution API Error:', error);
+            console.error('❌ Evolution API Error:', error);
             if (error instanceof Error && error.name === 'AbortError') {
                 return {
                     success: false,
@@ -9167,17 +9192,36 @@ class EvolutionAPIClient {
     /**
    * Enviar mensagem de mídia (imagem, vídeo, áudio, documento)
    */ async sendMediaMessage(instanceName, data) {
+        // Preparar payload sem campos vazios/undefined
+        const payload = {
+            number: data.number,
+            mediatype: data.mediatype,
+            media: data.media
+        };
+        // Adicionar campos opcionais apenas se tiverem valor
+        if (data.caption && data.caption.trim()) {
+            payload.caption = data.caption.trim();
+        }
+        if (data.fileName && data.fileName.trim()) {
+            payload.fileName = data.fileName.trim();
+        }
+        if (data.delay) {
+            payload.delay = data.delay;
+        }
+        if (data.quoted) {
+            payload.quoted = data.quoted;
+        }
+        console.log('🔄 Evolution API - Enviando mídia com payload:', {
+            endpoint: `/message/sendMedia/${instanceName}`,
+            hasMedia: !!data.media,
+            mediaType: data.mediatype,
+            hasCaption: !!data.caption,
+            hasFileName: !!data.fileName,
+            payloadKeys: Object.keys(payload)
+        });
         return this.makeRequest(`/message/sendMedia/${instanceName}`, {
             method: 'POST',
-            body: JSON.stringify({
-                number: data.number,
-                mediatype: data.mediatype,
-                media: data.media,
-                caption: data.caption,
-                fileName: data.fileName,
-                delay: data.delay,
-                quoted: data.quoted
-            })
+            body: JSON.stringify(payload)
         });
     }
     /**
@@ -9700,11 +9744,11 @@ async function POST(request, { params }) {
             });
         }
         const body = await request.json();
-        const { phoneNumber, message, messageType = 'text' } = body;
+        const { phoneNumber, message, messageType = 'text', mediaData, fileName, caption } = body;
         // Validações
-        if (!phoneNumber || !message) {
+        if (!phoneNumber) {
             return __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$server$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__["NextResponse"].json({
-                error: 'Número de telefone e mensagem são obrigatórios'
+                error: 'Número de telefone é obrigatório'
             }, {
                 status: 400
             });
@@ -9718,6 +9762,21 @@ async function POST(request, { params }) {
         ].includes(messageType)) {
             return __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$server$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__["NextResponse"].json({
                 error: 'Tipo de mensagem inválido'
+            }, {
+                status: 400
+            });
+        }
+        // Validações específicas por tipo
+        if (messageType === 'text' && !message) {
+            return __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$server$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__["NextResponse"].json({
+                error: 'Mensagem de texto é obrigatória'
+            }, {
+                status: 400
+            });
+        }
+        if (messageType !== 'text' && !mediaData) {
+            return __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$server$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__["NextResponse"].json({
+                error: 'Dados de mídia são obrigatórios para este tipo de mensagem'
             }, {
                 status: 400
             });
@@ -9745,15 +9804,108 @@ async function POST(request, { params }) {
         }
         // Enviar mensagem via Evolution API
         const evolutionClient = (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$evolution$2d$api$2f$client$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["getEvolutionAPIClient"])();
-        const sendResponse = await evolutionClient.sendTextMessage(instance.name, {
-            number: phoneNumber,
-            text: message
+        let sendResponse;
+        console.log('🔄 Enviando mensagem via Evolution API:', {
+            instanceName: instance.name,
+            phoneNumber,
+            messageType,
+            hasMediaData: !!mediaData,
+            mediaDataLength: mediaData?.length,
+            fileName,
+            caption
+        });
+        if (messageType === 'text') {
+            // Enviar mensagem de texto
+            sendResponse = await evolutionClient.sendTextMessage(instance.name, {
+                number: phoneNumber,
+                text: message
+            });
+        } else {
+            // Validar dados de mídia
+            if (!mediaData) {
+                return __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$server$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__["NextResponse"].json({
+                    error: 'Dados de mídia são obrigatórios para este tipo de mensagem'
+                }, {
+                    status: 400
+                });
+            }
+            // Verificar se é base64 válido
+            if (!mediaData.startsWith('data:')) {
+                return __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$server$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__["NextResponse"].json({
+                    error: 'Formato de mídia inválido - deve ser base64'
+                }, {
+                    status: 400
+                });
+            }
+            // Extrair apenas o conteúdo base64 (remover prefixo data:mime-type;base64,)
+            const base64Data = mediaData.split(',')[1];
+            if (!base64Data) {
+                return __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$server$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__["NextResponse"].json({
+                    error: 'Dados base64 inválidos'
+                }, {
+                    status: 400
+                });
+            }
+            // Validação específica para áudio
+            if (messageType === 'audio') {
+                const mimeType = mediaData.split(',')[0];
+                console.log('🎵 Validação de áudio:', {
+                    mimeType,
+                    isOgg: mimeType.includes('ogg'),
+                    isOpus: mimeType.includes('opus'),
+                    base64Size: base64Data.length,
+                    fileName: fileName,
+                    caption: caption
+                });
+                // Verificar se é formato suportado pelo WhatsApp
+                const supportedAudioTypes = [
+                    'audio/ogg',
+                    'audio/aac',
+                    'audio/mp4',
+                    'audio/mpeg',
+                    'audio/amr'
+                ];
+                const isSupported = supportedAudioTypes.some((type)=>mimeType.includes(type));
+                if (!isSupported) {
+                    console.warn('⚠️ Formato de áudio não oficialmente suportado:', mimeType);
+                }
+            }
+            // Enviar mensagem de mídia
+            const mediaPayload = {
+                number: phoneNumber,
+                mediatype: messageType,
+                media: base64Data,
+                caption: caption || message,
+                fileName: fileName
+            };
+            console.log('📤 Payload de mídia:', {
+                number: phoneNumber,
+                mediatype: messageType,
+                hasMedia: !!base64Data,
+                base64Length: base64Data.length,
+                originalDataStart: mediaData.substring(0, 50) + '...',
+                caption: caption || message,
+                fileName
+            });
+            sendResponse = await evolutionClient.sendMediaMessage(instance.name, mediaPayload);
+        }
+        console.log('📡 Resposta da Evolution API:', {
+            success: sendResponse.success,
+            error: sendResponse.error,
+            data: sendResponse.data
         });
         if (!sendResponse.success) {
-            console.error('Erro ao enviar mensagem:', sendResponse.error);
+            console.error('❌ Erro detalhado ao enviar mensagem:', {
+                error: sendResponse.error,
+                instanceName: instance.name,
+                instanceStatus: instance.status,
+                messageType,
+                phoneNumber
+            });
             return __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$server$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__["NextResponse"].json({
                 error: 'Erro ao enviar mensagem',
-                details: sendResponse.error?.message
+                details: sendResponse.error?.message || 'Erro desconhecido',
+                evolutionError: sendResponse.error
             }, {
                 status: 500
             });
@@ -9809,20 +9961,27 @@ async function POST(request, { params }) {
                 });
             }
             // Salvar mensagem
+            const messageData = {
+                id: (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$utils$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["generateId"])(),
+                instanceId: instance.id,
+                conversationId: conversation.id,
+                contactId: contact.id,
+                remoteJid,
+                messageId: sendResponse.data?.key?.id || (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$utils$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["generateId"])(),
+                fromMe: true,
+                messageType: messageType.toUpperCase(),
+                content: messageType === 'text' ? message : caption || fileName || 'Mídia enviada',
+                timestamp: new Date(),
+                status: 'SENT'
+            };
+            // Adicionar dados de mídia se aplicável
+            if (messageType !== 'text') {
+                messageData.mediaUrl = mediaData;
+                messageData.fileName = fileName;
+                messageData.caption = caption;
+            }
             await __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$prisma$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["prisma"].whatsAppMessage.create({
-                data: {
-                    id: (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$utils$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["generateId"])(),
-                    instanceId: instance.id,
-                    conversationId: conversation.id,
-                    contactId: contact.id,
-                    remoteJid,
-                    messageId: sendResponse.data?.key?.id || (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$utils$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["generateId"])(),
-                    fromMe: true,
-                    messageType: 'TEXT',
-                    content: message,
-                    timestamp: new Date(),
-                    status: 'SENT'
-                }
+                data: messageData
             });
             // Atualizar conversa
             await __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$prisma$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["prisma"].whatsAppConversation.update({

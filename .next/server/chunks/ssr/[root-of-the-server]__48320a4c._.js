@@ -1471,8 +1471,10 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$re
 function ChatArea({ conversation, messages, isLoading, onSendMessage, onLoadMore }) {
     const [newMessage, setNewMessage] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])('');
     const [isSending, setIsSending] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(false);
+    const [inputMode, setInputMode] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])('text');
     const messagesEndRef = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useRef"])(null);
     const scrollAreaRef = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useRef"])(null);
+    const inputRef = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useRef"])(null);
     // Auto-scroll para a última mensagem
     (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useEffect"])(()=>{
         if (messagesEndRef.current) {
@@ -1483,6 +1485,48 @@ function ChatArea({ conversation, messages, isLoading, onSendMessage, onLoadMore
         }
     }, [
         messages
+    ]);
+    // Auto-focus no input quando conversa muda ou componente é montado
+    (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useEffect"])(()=>{
+        const focusInput = ()=>{
+            if (inputRef.current && conversation.instance.status === 'CONNECTED') {
+                inputRef.current.focus();
+            }
+        };
+        // Focus imediato
+        focusInput();
+        // Focus após um pequeno delay para garantir que o componente esteja totalmente renderizado
+        const timeoutId = setTimeout(focusInput, 100);
+        return ()=>clearTimeout(timeoutId);
+    }, [
+        conversation.id,
+        conversation.instance.status
+    ]);
+    // Manter foco no input após mudanças de estado de envio
+    (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useEffect"])(()=>{
+        if (!isSending && conversation.instance.status === 'CONNECTED') {
+            // Delay maior para garantir que o DOM foi atualizado
+            const timeoutId = setTimeout(()=>{
+                if (inputRef.current) {
+                    inputRef.current.focus();
+                }
+            }, 200);
+            return ()=>clearTimeout(timeoutId);
+        }
+    }, [
+        isSending,
+        conversation.instance.status
+    ]);
+    // Garantir foco após scroll para baixo
+    (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useEffect"])(()=>{
+        const timeoutId = setTimeout(()=>{
+            if (inputRef.current && conversation.instance.status === 'CONNECTED') {
+                inputRef.current.focus();
+            }
+        }, 300);
+        return ()=>clearTimeout(timeoutId);
+    }, [
+        messages.length
     ]);
     // Scroll imediato após enviar mensagem
     const scrollToBottom = ()=>{
@@ -1497,22 +1541,152 @@ function ChatArea({ conversation, messages, isLoading, onSendMessage, onLoadMore
     };
     const handleSendMessage = async ()=>{
         if (!newMessage.trim() || isSending) return;
+        const messageToSend = newMessage.trim();
         setIsSending(true);
         try {
-            await onSendMessage(newMessage.trim(), conversation.id);
+            // Limpar input imediatamente para UX mais fluida
             setNewMessage('');
+            await onSendMessage({
+                content: messageToSend,
+                messageType: 'text',
+                mediaData: undefined,
+                fileName: undefined,
+                caption: undefined
+            }, conversation.id);
             scrollToBottom();
+            // Múltiplas tentativas de manter foco com delays diferentes
+            setTimeout(()=>{
+                if (inputRef.current) {
+                    inputRef.current.focus();
+                }
+            }, 50);
+            setTimeout(()=>{
+                if (inputRef.current) {
+                    inputRef.current.focus();
+                }
+            }, 150);
+            setTimeout(()=>{
+                if (inputRef.current) {
+                    inputRef.current.focus();
+                }
+            }, 300);
         } catch (error) {
             console.error('Erro ao enviar mensagem:', error);
+            // Restaurar mensagem em caso de erro
+            setNewMessage(messageToSend);
+            // Manter foco mesmo em caso de erro
+            setTimeout(()=>{
+                if (inputRef.current) {
+                    inputRef.current.focus();
+                }
+            }, 100);
         } finally{
             setIsSending(false);
         }
     };
     const handleKeyPress = (e)=>{
-        if (e.key === 'Enter' && !e.shiftKey) {
-            e.preventDefault();
-            handleSendMessage();
+        if (e.key === 'Enter') {
+            if (e.shiftKey) {
+                // Shift+Enter = nova linha (comportamento padrão do textarea)
+                return;
+            } else {
+                // Enter = enviar mensagem
+                e.preventDefault();
+                handleSendMessage();
+            }
         }
+    };
+    const handleKeyDown = (e)=>{
+        // Esc = limpar input
+        if (e.key === 'Escape') {
+            setNewMessage('');
+            e.preventDefault();
+        }
+        // Ctrl/Cmd + A = selecionar tudo no input
+        if ((e.ctrlKey || e.metaKey) && e.key === 'a') {
+            e.stopPropagation() // Previne seleção de toda a página
+            ;
+        }
+    };
+    const handleInputClick = ()=>{
+        // Garantir foco ao clicar
+        if (inputRef.current) {
+            inputRef.current.focus();
+        }
+    };
+    // Função para garantir foco quando necessário
+    const ensureFocus = ()=>{
+        if (inputRef.current && conversation.instance.status === 'CONNECTED') {
+            setTimeout(()=>{
+                if (inputRef.current) {
+                    inputRef.current.focus();
+                }
+            }, 50);
+        }
+    };
+    // Função para envio de mídia
+    const handleMediaSend = async (mediaData, fileName, mediaType, caption)=>{
+        setIsSending(true);
+        try {
+            await onSendMessage({
+                content: caption,
+                messageType: mediaType,
+                mediaData,
+                fileName,
+                caption
+            }, conversation.id);
+            setInputMode('text');
+            scrollToBottom();
+            // Manter foco no input após envio
+            setTimeout(()=>{
+                if (inputRef.current) {
+                    inputRef.current.focus();
+                }
+            }, 300);
+        } catch (error) {
+            console.error('Erro ao enviar mídia:', error);
+        } finally{
+            setIsSending(false);
+        }
+    };
+    // Função para envio de áudio
+    const handleAudioSend = async (audioBlob, duration)=>{
+        setIsSending(true);
+        try {
+            // Converter áudio para base64
+            const reader = new FileReader();
+            reader.onloadend = async ()=>{
+                const base64 = reader.result;
+                await onSendMessage({
+                    content: `Áudio - ${Math.floor(duration / 60)}:${(duration % 60).toString().padStart(2, '0')}`,
+                    messageType: 'audio',
+                    mediaData: base64,
+                    fileName: `audio_${Date.now()}.webm`
+                }, conversation.id);
+                setInputMode('text');
+                scrollToBottom();
+                // Manter foco no input após envio
+                setTimeout(()=>{
+                    if (inputRef.current) {
+                        inputRef.current.focus();
+                    }
+                }, 300);
+            };
+            reader.readAsDataURL(audioBlob);
+        } catch (error) {
+            console.error('Erro ao enviar áudio:', error);
+        } finally{
+            setIsSending(false);
+        }
+    };
+    // Função para cancelar modo de mídia/áudio
+    const handleCancelMode = ()=>{
+        setInputMode('text');
+        setTimeout(()=>{
+            if (inputRef.current) {
+                inputRef.current.focus();
+            }
+        }, 100);
     };
     const getMessageStatusIcon = (status)=>{
         switch(status){
@@ -1521,7 +1695,7 @@ function ChatArea({ conversation, messages, isLoading, onSendMessage, onLoadMore
                     className: "w-3 h-3 text-gray-400"
                 }, void 0, false, {
                     fileName: "[project]/src/app/admin/whatsapp/conversations/components/ChatArea.tsx",
-                    lineNumber: 146,
+                    lineNumber: 364,
                     columnNumber: 16
                 }, this);
             case 'DELIVERED':
@@ -1529,7 +1703,7 @@ function ChatArea({ conversation, messages, isLoading, onSendMessage, onLoadMore
                     className: "w-3 h-3 text-gray-400"
                 }, void 0, false, {
                     fileName: "[project]/src/app/admin/whatsapp/conversations/components/ChatArea.tsx",
-                    lineNumber: 148,
+                    lineNumber: 366,
                     columnNumber: 16
                 }, this);
             case 'READ':
@@ -1537,7 +1711,7 @@ function ChatArea({ conversation, messages, isLoading, onSendMessage, onLoadMore
                     className: "w-3 h-3 text-blue-500"
                 }, void 0, false, {
                     fileName: "[project]/src/app/admin/whatsapp/conversations/components/ChatArea.tsx",
-                    lineNumber: 150,
+                    lineNumber: 368,
                     columnNumber: 16
                 }, this);
             case 'FAILED':
@@ -1545,7 +1719,7 @@ function ChatArea({ conversation, messages, isLoading, onSendMessage, onLoadMore
                     className: "w-3 h-3 text-red-500"
                 }, void 0, false, {
                     fileName: "[project]/src/app/admin/whatsapp/conversations/components/ChatArea.tsx",
-                    lineNumber: 152,
+                    lineNumber: 370,
                     columnNumber: 16
                 }, this);
             default:
@@ -1553,7 +1727,7 @@ function ChatArea({ conversation, messages, isLoading, onSendMessage, onLoadMore
                     className: "w-3 h-3 text-gray-400"
                 }, void 0, false, {
                     fileName: "[project]/src/app/admin/whatsapp/conversations/components/ChatArea.tsx",
-                    lineNumber: 154,
+                    lineNumber: 372,
                     columnNumber: 16
                 }, this);
         }
@@ -1602,7 +1776,7 @@ function ChatArea({ conversation, messages, isLoading, onSendMessage, onLoadMore
                                     className: "w-full h-auto"
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/admin/whatsapp/conversations/components/ChatArea.tsx",
-                                    lineNumber: 198,
+                                    lineNumber: 416,
                                     columnNumber: 17
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Button"], {
@@ -1614,18 +1788,18 @@ function ChatArea({ conversation, messages, isLoading, onSendMessage, onLoadMore
                                         className: "w-4 h-4"
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/admin/whatsapp/conversations/components/ChatArea.tsx",
-                                        lineNumber: 209,
+                                        lineNumber: 427,
                                         columnNumber: 19
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/admin/whatsapp/conversations/components/ChatArea.tsx",
-                                    lineNumber: 203,
+                                    lineNumber: 421,
                                     columnNumber: 17
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/app/admin/whatsapp/conversations/components/ChatArea.tsx",
-                            lineNumber: 197,
+                            lineNumber: 415,
                             columnNumber: 15
                         }, this),
                         message.content && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1633,13 +1807,13 @@ function ChatArea({ conversation, messages, isLoading, onSendMessage, onLoadMore
                             children: message.content
                         }, void 0, false, {
                             fileName: "[project]/src/app/admin/whatsapp/conversations/components/ChatArea.tsx",
-                            lineNumber: 214,
+                            lineNumber: 432,
                             columnNumber: 15
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/src/app/admin/whatsapp/conversations/components/ChatArea.tsx",
-                    lineNumber: 195,
+                    lineNumber: 413,
                     columnNumber: 11
                 }, this);
             case 'AUDIO':
@@ -1654,12 +1828,12 @@ function ChatArea({ conversation, messages, isLoading, onSendMessage, onLoadMore
                                 className: "w-4 h-4"
                             }, void 0, false, {
                                 fileName: "[project]/src/app/admin/whatsapp/conversations/components/ChatArea.tsx",
-                                lineNumber: 223,
+                                lineNumber: 441,
                                 columnNumber: 15
                             }, this)
                         }, void 0, false, {
                             fileName: "[project]/src/app/admin/whatsapp/conversations/components/ChatArea.tsx",
-                            lineNumber: 222,
+                            lineNumber: 440,
                             columnNumber: 13
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1670,17 +1844,17 @@ function ChatArea({ conversation, messages, isLoading, onSendMessage, onLoadMore
                                     className: "h-1 bg-green-500 rounded-full w-0"
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/admin/whatsapp/conversations/components/ChatArea.tsx",
-                                    lineNumber: 227,
+                                    lineNumber: 445,
                                     columnNumber: 17
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/src/app/admin/whatsapp/conversations/components/ChatArea.tsx",
-                                lineNumber: 226,
+                                lineNumber: 444,
                                 columnNumber: 15
                             }, this)
                         }, void 0, false, {
                             fileName: "[project]/src/app/admin/whatsapp/conversations/components/ChatArea.tsx",
-                            lineNumber: 225,
+                            lineNumber: 443,
                             columnNumber: 13
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -1688,13 +1862,13 @@ function ChatArea({ conversation, messages, isLoading, onSendMessage, onLoadMore
                             children: "0:00"
                         }, void 0, false, {
                             fileName: "[project]/src/app/admin/whatsapp/conversations/components/ChatArea.tsx",
-                            lineNumber: 230,
+                            lineNumber: 448,
                             columnNumber: 13
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/src/app/admin/whatsapp/conversations/components/ChatArea.tsx",
-                    lineNumber: 221,
+                    lineNumber: 439,
                     columnNumber: 11
                 }, this);
             case 'VIDEO':
@@ -1712,17 +1886,17 @@ function ChatArea({ conversation, messages, isLoading, onSendMessage, onLoadMore
                                     type: message.mimetype || 'video/mp4'
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/admin/whatsapp/conversations/components/ChatArea.tsx",
-                                    lineNumber: 244,
+                                    lineNumber: 462,
                                     columnNumber: 19
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/src/app/admin/whatsapp/conversations/components/ChatArea.tsx",
-                                lineNumber: 239,
+                                lineNumber: 457,
                                 columnNumber: 17
                             }, this)
                         }, void 0, false, {
                             fileName: "[project]/src/app/admin/whatsapp/conversations/components/ChatArea.tsx",
-                            lineNumber: 238,
+                            lineNumber: 456,
                             columnNumber: 15
                         }, this),
                         message.content && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1730,13 +1904,13 @@ function ChatArea({ conversation, messages, isLoading, onSendMessage, onLoadMore
                             children: message.content
                         }, void 0, false, {
                             fileName: "[project]/src/app/admin/whatsapp/conversations/components/ChatArea.tsx",
-                            lineNumber: 249,
+                            lineNumber: 467,
                             columnNumber: 15
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/src/app/admin/whatsapp/conversations/components/ChatArea.tsx",
-                    lineNumber: 236,
+                    lineNumber: 454,
                     columnNumber: 11
                 }, this);
             case 'DOCUMENT':
@@ -1747,7 +1921,7 @@ function ChatArea({ conversation, messages, isLoading, onSendMessage, onLoadMore
                             className: "w-8 h-8 text-blue-500"
                         }, void 0, false, {
                             fileName: "[project]/src/app/admin/whatsapp/conversations/components/ChatArea.tsx",
-                            lineNumber: 257,
+                            lineNumber: 475,
                             columnNumber: 13
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1758,7 +1932,7 @@ function ChatArea({ conversation, messages, isLoading, onSendMessage, onLoadMore
                                     children: message.fileName || 'Documento'
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/admin/whatsapp/conversations/components/ChatArea.tsx",
-                                    lineNumber: 259,
+                                    lineNumber: 477,
                                     columnNumber: 15
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1766,13 +1940,13 @@ function ChatArea({ conversation, messages, isLoading, onSendMessage, onLoadMore
                                     children: message.mimetype
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/admin/whatsapp/conversations/components/ChatArea.tsx",
-                                    lineNumber: 262,
+                                    lineNumber: 480,
                                     columnNumber: 15
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/app/admin/whatsapp/conversations/components/ChatArea.tsx",
-                            lineNumber: 258,
+                            lineNumber: 476,
                             columnNumber: 13
                         }, this),
                         message.mediaUrl && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Button"], {
@@ -1783,18 +1957,18 @@ function ChatArea({ conversation, messages, isLoading, onSendMessage, onLoadMore
                                 className: "w-4 h-4"
                             }, void 0, false, {
                                 fileName: "[project]/src/app/admin/whatsapp/conversations/components/ChatArea.tsx",
-                                lineNumber: 270,
+                                lineNumber: 488,
                                 columnNumber: 17
                             }, this)
                         }, void 0, false, {
                             fileName: "[project]/src/app/admin/whatsapp/conversations/components/ChatArea.tsx",
-                            lineNumber: 265,
+                            lineNumber: 483,
                             columnNumber: 15
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/src/app/admin/whatsapp/conversations/components/ChatArea.tsx",
-                    lineNumber: 256,
+                    lineNumber: 474,
                     columnNumber: 11
                 }, this);
             case 'LOCATION':
@@ -1809,7 +1983,7 @@ function ChatArea({ conversation, messages, isLoading, onSendMessage, onLoadMore
                                     children: "📍"
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/admin/whatsapp/conversations/components/ChatArea.tsx",
-                                    lineNumber: 280,
+                                    lineNumber: 498,
                                     columnNumber: 15
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -1817,13 +1991,13 @@ function ChatArea({ conversation, messages, isLoading, onSendMessage, onLoadMore
                                     children: "Localização"
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/admin/whatsapp/conversations/components/ChatArea.tsx",
-                                    lineNumber: 281,
+                                    lineNumber: 499,
                                     columnNumber: 15
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/app/admin/whatsapp/conversations/components/ChatArea.tsx",
-                            lineNumber: 279,
+                            lineNumber: 497,
                             columnNumber: 13
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1831,13 +2005,13 @@ function ChatArea({ conversation, messages, isLoading, onSendMessage, onLoadMore
                             children: message.content
                         }, void 0, false, {
                             fileName: "[project]/src/app/admin/whatsapp/conversations/components/ChatArea.tsx",
-                            lineNumber: 283,
+                            lineNumber: 501,
                             columnNumber: 13
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/src/app/admin/whatsapp/conversations/components/ChatArea.tsx",
-                    lineNumber: 278,
+                    lineNumber: 496,
                     columnNumber: 11
                 }, this);
             case 'CONTACT':
@@ -1851,7 +2025,7 @@ function ChatArea({ conversation, messages, isLoading, onSendMessage, onLoadMore
                                 children: "👤"
                             }, void 0, false, {
                                 fileName: "[project]/src/app/admin/whatsapp/conversations/components/ChatArea.tsx",
-                                lineNumber: 291,
+                                lineNumber: 509,
                                 columnNumber: 15
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1861,7 +2035,7 @@ function ChatArea({ conversation, messages, isLoading, onSendMessage, onLoadMore
                                         children: "Contato"
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/admin/whatsapp/conversations/components/ChatArea.tsx",
-                                        lineNumber: 293,
+                                        lineNumber: 511,
                                         columnNumber: 17
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1869,24 +2043,24 @@ function ChatArea({ conversation, messages, isLoading, onSendMessage, onLoadMore
                                         children: message.content
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/admin/whatsapp/conversations/components/ChatArea.tsx",
-                                        lineNumber: 294,
+                                        lineNumber: 512,
                                         columnNumber: 17
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/app/admin/whatsapp/conversations/components/ChatArea.tsx",
-                                lineNumber: 292,
+                                lineNumber: 510,
                                 columnNumber: 15
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/app/admin/whatsapp/conversations/components/ChatArea.tsx",
-                        lineNumber: 290,
+                        lineNumber: 508,
                         columnNumber: 13
                     }, this)
                 }, void 0, false, {
                     fileName: "[project]/src/app/admin/whatsapp/conversations/components/ChatArea.tsx",
-                    lineNumber: 289,
+                    lineNumber: 507,
                     columnNumber: 11
                 }, this);
             case 'STICKER':
@@ -1895,7 +2069,7 @@ function ChatArea({ conversation, messages, isLoading, onSendMessage, onLoadMore
                     children: message.content || '😊'
                 }, void 0, false, {
                     fileName: "[project]/src/app/admin/whatsapp/conversations/components/ChatArea.tsx",
-                    lineNumber: 302,
+                    lineNumber: 520,
                     columnNumber: 11
                 }, this);
             default:
@@ -1904,9 +2078,15 @@ function ChatArea({ conversation, messages, isLoading, onSendMessage, onLoadMore
                     children: message.content
                 }, void 0, false, {
                     fileName: "[project]/src/app/admin/whatsapp/conversations/components/ChatArea.tsx",
-                    lineNumber: 308,
+                    lineNumber: 526,
                     columnNumber: 16
                 }, this);
+        }
+    };
+    // Função para focar no input (pode ser chamada externamente)
+    const focusInput = ()=>{
+        if (inputRef.current) {
+            inputRef.current.focus();
         }
     };
     if (isLoading) {
@@ -1919,7 +2099,7 @@ function ChatArea({ conversation, messages, isLoading, onSendMessage, onLoadMore
                         className: "w-8 h-8 text-gray-400 mx-auto mb-2 animate-pulse"
                     }, void 0, false, {
                         fileName: "[project]/src/app/admin/whatsapp/conversations/components/ChatArea.tsx",
-                        lineNumber: 316,
+                        lineNumber: 541,
                         columnNumber: 11
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1927,18 +2107,18 @@ function ChatArea({ conversation, messages, isLoading, onSendMessage, onLoadMore
                         children: "Carregando mensagens..."
                     }, void 0, false, {
                         fileName: "[project]/src/app/admin/whatsapp/conversations/components/ChatArea.tsx",
-                        lineNumber: 317,
+                        lineNumber: 542,
                         columnNumber: 11
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/src/app/admin/whatsapp/conversations/components/ChatArea.tsx",
-                lineNumber: 315,
+                lineNumber: 540,
                 columnNumber: 9
             }, this)
         }, void 0, false, {
             fileName: "[project]/src/app/admin/whatsapp/conversations/components/ChatArea.tsx",
-            lineNumber: 314,
+            lineNumber: 539,
             columnNumber: 7
         }, this);
     }
@@ -1960,7 +2140,7 @@ function ChatArea({ conversation, messages, isLoading, onSendMessage, onLoadMore
                                         className: "w-12 h-12 text-gray-400 mx-auto mb-3"
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/admin/whatsapp/conversations/components/ChatArea.tsx",
-                                        lineNumber: 331,
+                                        lineNumber: 556,
                                         columnNumber: 17
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
@@ -1968,7 +2148,7 @@ function ChatArea({ conversation, messages, isLoading, onSendMessage, onLoadMore
                                         children: "Nenhuma mensagem ainda"
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/admin/whatsapp/conversations/components/ChatArea.tsx",
-                                        lineNumber: 332,
+                                        lineNumber: 557,
                                         columnNumber: 17
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1976,13 +2156,13 @@ function ChatArea({ conversation, messages, isLoading, onSendMessage, onLoadMore
                                         children: "Envie uma mensagem para começar a conversa"
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/admin/whatsapp/conversations/components/ChatArea.tsx",
-                                        lineNumber: 335,
+                                        lineNumber: 560,
                                         columnNumber: 17
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/app/admin/whatsapp/conversations/components/ChatArea.tsx",
-                                lineNumber: 330,
+                                lineNumber: 555,
                                 columnNumber: 15
                             }, this) : messages.map((message, index)=>{
                                 const isFromMe = message.fromMe;
@@ -1999,7 +2179,7 @@ function ChatArea({ conversation, messages, isLoading, onSendMessage, onLoadMore
                                                         src: message.contact.profilePicUrl || undefined
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/admin/whatsapp/conversations/components/ChatArea.tsx",
-                                                        lineNumber: 358,
+                                                        lineNumber: 583,
                                                         columnNumber: 29
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$avatar$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["AvatarFallback"], {
@@ -2007,24 +2187,24 @@ function ChatArea({ conversation, messages, isLoading, onSendMessage, onLoadMore
                                                         children: getContactInitials(message.contact)
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/admin/whatsapp/conversations/components/ChatArea.tsx",
-                                                        lineNumber: 359,
+                                                        lineNumber: 584,
                                                         columnNumber: 29
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/app/admin/whatsapp/conversations/components/ChatArea.tsx",
-                                                lineNumber: 357,
+                                                lineNumber: 582,
                                                 columnNumber: 27
                                             }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                 className: "w-8 h-8"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/admin/whatsapp/conversations/components/ChatArea.tsx",
-                                                lineNumber: 364,
+                                                lineNumber: 589,
                                                 columnNumber: 27
                                             }, this)
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/admin/whatsapp/conversations/components/ChatArea.tsx",
-                                            lineNumber: 355,
+                                            lineNumber: 580,
                                             columnNumber: 23
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2035,7 +2215,7 @@ function ChatArea({ conversation, messages, isLoading, onSendMessage, onLoadMore
                                                     children: getContactDisplayName(message.contact)
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/admin/whatsapp/conversations/components/ChatArea.tsx",
-                                                    lineNumber: 373,
+                                                    lineNumber: 598,
                                                     columnNumber: 25
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2055,7 +2235,7 @@ function ChatArea({ conversation, messages, isLoading, onSendMessage, onLoadMore
                                                                             className: "w-3 h-3 text-blue-600"
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/src/app/admin/whatsapp/conversations/components/ChatArea.tsx",
-                                                                            lineNumber: 394,
+                                                                            lineNumber: 619,
                                                                             columnNumber: 31
                                                                         }, this),
                                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -2063,13 +2243,13 @@ function ChatArea({ conversation, messages, isLoading, onSendMessage, onLoadMore
                                                                             children: "Ação Executada"
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/src/app/admin/whatsapp/conversations/components/ChatArea.tsx",
-                                                                            lineNumber: 395,
+                                                                            lineNumber: 620,
                                                                             columnNumber: 31
                                                                         }, this)
                                                                     ]
                                                                 }, void 0, true, {
                                                                     fileName: "[project]/src/app/admin/whatsapp/conversations/components/ChatArea.tsx",
-                                                                    lineNumber: 393,
+                                                                    lineNumber: 618,
                                                                     columnNumber: 29
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -2077,13 +2257,13 @@ function ChatArea({ conversation, messages, isLoading, onSendMessage, onLoadMore
                                                                     children: message.toolExecution.description
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/src/app/admin/whatsapp/conversations/components/ChatArea.tsx",
-                                                                    lineNumber: 399,
+                                                                    lineNumber: 624,
                                                                     columnNumber: 29
                                                                 }, this)
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/src/app/admin/whatsapp/conversations/components/ChatArea.tsx",
-                                                            lineNumber: 392,
+                                                            lineNumber: 617,
                                                             columnNumber: 27
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2094,32 +2274,32 @@ function ChatArea({ conversation, messages, isLoading, onSendMessage, onLoadMore
                                                                     children: formatMessageTime(message.timestamp)
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/src/app/admin/whatsapp/conversations/components/ChatArea.tsx",
-                                                                    lineNumber: 407,
+                                                                    lineNumber: 632,
                                                                     columnNumber: 27
                                                                 }, this),
                                                                 isFromMe && getMessageStatusIcon(message.status)
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/src/app/admin/whatsapp/conversations/components/ChatArea.tsx",
-                                                            lineNumber: 406,
+                                                            lineNumber: 631,
                                                             columnNumber: 25
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/src/app/admin/whatsapp/conversations/components/ChatArea.tsx",
-                                                    lineNumber: 378,
+                                                    lineNumber: 603,
                                                     columnNumber: 23
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/src/app/admin/whatsapp/conversations/components/ChatArea.tsx",
-                                            lineNumber: 370,
+                                            lineNumber: 595,
                                             columnNumber: 21
                                         }, this)
                                     ]
                                 }, message.id, true, {
                                     fileName: "[project]/src/app/admin/whatsapp/conversations/components/ChatArea.tsx",
-                                    lineNumber: 349,
+                                    lineNumber: 574,
                                     columnNumber: 19
                                 }, this);
                             }),
@@ -2127,23 +2307,23 @@ function ChatArea({ conversation, messages, isLoading, onSendMessage, onLoadMore
                                 ref: messagesEndRef
                             }, void 0, false, {
                                 fileName: "[project]/src/app/admin/whatsapp/conversations/components/ChatArea.tsx",
-                                lineNumber: 418,
+                                lineNumber: 643,
                                 columnNumber: 13
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/app/admin/whatsapp/conversations/components/ChatArea.tsx",
-                        lineNumber: 328,
+                        lineNumber: 553,
                         columnNumber: 11
                     }, this)
                 }, void 0, false, {
                     fileName: "[project]/src/app/admin/whatsapp/conversations/components/ChatArea.tsx",
-                    lineNumber: 327,
+                    lineNumber: 552,
                     columnNumber: 9
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/src/app/admin/whatsapp/conversations/components/ChatArea.tsx",
-                lineNumber: 326,
+                lineNumber: 551,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2156,96 +2336,177 @@ function ChatArea({ conversation, messages, isLoading, onSendMessage, onLoadMore
                                 variant: "ghost",
                                 size: "sm",
                                 disabled: true,
+                                className: "text-gray-400",
                                 children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$paperclip$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Paperclip$3e$__["Paperclip"], {
                                     className: "w-4 h-4"
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/admin/whatsapp/conversations/components/ChatArea.tsx",
-                                    lineNumber: 428,
+                                    lineNumber: 653,
                                     columnNumber: 13
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/src/app/admin/whatsapp/conversations/components/ChatArea.tsx",
-                                lineNumber: 427,
+                                lineNumber: 652,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                 className: "flex-1 relative",
                                 children: [
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$input$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Input"], {
-                                        placeholder: "Digite uma mensagem...",
+                                        placeholder: conversation.instance.status === 'CONNECTED' ? "Digite uma mensagem..." : "Instância desconectada...",
                                         value: newMessage,
                                         onChange: (e)=>setNewMessage(e.target.value),
                                         onKeyPress: handleKeyPress,
+                                        onKeyDown: handleKeyDown,
+                                        onClick: handleInputClick,
+                                        onBlur: ensureFocus,
                                         disabled: isSending || conversation.instance.status !== 'CONNECTED',
-                                        className: "pr-10"
+                                        className: `pr-20 transition-all duration-200 ${isSending ? 'opacity-75' : ''} ${conversation.instance.status !== 'CONNECTED' ? 'bg-gray-50 text-gray-400' : 'bg-white'}`,
+                                        ref: inputRef,
+                                        autoComplete: "off",
+                                        spellCheck: false,
+                                        autoFocus: conversation.instance.status === 'CONNECTED'
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/admin/whatsapp/conversations/components/ChatArea.tsx",
-                                        lineNumber: 433,
+                                        lineNumber: 658,
                                         columnNumber: 13
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Button"], {
                                         variant: "ghost",
                                         size: "sm",
-                                        className: "absolute right-2 top-1/2 transform -translate-y-1/2",
+                                        className: "absolute right-12 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600",
                                         disabled: true,
                                         children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$smile$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Smile$3e$__["Smile"], {
                                             className: "w-4 h-4"
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/admin/whatsapp/conversations/components/ChatArea.tsx",
-                                            lineNumber: 449,
+                                            lineNumber: 691,
                                             columnNumber: 15
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/admin/whatsapp/conversations/components/ChatArea.tsx",
-                                        lineNumber: 443,
+                                        lineNumber: 685,
                                         columnNumber: 13
+                                    }, this),
+                                    isSending && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        className: "absolute right-2 top-1/2 transform -translate-y-1/2",
+                                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                            className: "flex space-x-1",
+                                            children: [
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                    className: "w-1 h-1 bg-green-500 rounded-full animate-bounce"
+                                                }, void 0, false, {
+                                                    fileName: "[project]/src/app/admin/whatsapp/conversations/components/ChatArea.tsx",
+                                                    lineNumber: 698,
+                                                    columnNumber: 19
+                                                }, this),
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                    className: "w-1 h-1 bg-green-500 rounded-full animate-bounce",
+                                                    style: {
+                                                        animationDelay: '0.1s'
+                                                    }
+                                                }, void 0, false, {
+                                                    fileName: "[project]/src/app/admin/whatsapp/conversations/components/ChatArea.tsx",
+                                                    lineNumber: 699,
+                                                    columnNumber: 19
+                                                }, this),
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                    className: "w-1 h-1 bg-green-500 rounded-full animate-bounce",
+                                                    style: {
+                                                        animationDelay: '0.2s'
+                                                    }
+                                                }, void 0, false, {
+                                                    fileName: "[project]/src/app/admin/whatsapp/conversations/components/ChatArea.tsx",
+                                                    lineNumber: 700,
+                                                    columnNumber: 19
+                                                }, this)
+                                            ]
+                                        }, void 0, true, {
+                                            fileName: "[project]/src/app/admin/whatsapp/conversations/components/ChatArea.tsx",
+                                            lineNumber: 697,
+                                            columnNumber: 17
+                                        }, this)
+                                    }, void 0, false, {
+                                        fileName: "[project]/src/app/admin/whatsapp/conversations/components/ChatArea.tsx",
+                                        lineNumber: 696,
+                                        columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/app/admin/whatsapp/conversations/components/ChatArea.tsx",
-                                lineNumber: 432,
+                                lineNumber: 657,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Button"], {
                                 onClick: handleSendMessage,
                                 disabled: !newMessage.trim() || isSending || conversation.instance.status !== 'CONNECTED',
                                 size: "sm",
-                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$send$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Send$3e$__["Send"], {
+                                className: `transition-all duration-200 ${newMessage.trim() && !isSending && conversation.instance.status === 'CONNECTED' ? 'bg-green-500 hover:bg-green-600 text-white' : 'bg-gray-100 text-gray-400'}`,
+                                children: isSending ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                    className: "w-4 h-4 border-2 border-gray-300 border-t-white rounded-full animate-spin"
+                                }, void 0, false, {
+                                    fileName: "[project]/src/app/admin/whatsapp/conversations/components/ChatArea.tsx",
+                                    lineNumber: 718,
+                                    columnNumber: 15
+                                }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$send$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Send$3e$__["Send"], {
                                     className: "w-4 h-4"
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/admin/whatsapp/conversations/components/ChatArea.tsx",
-                                    lineNumber: 459,
-                                    columnNumber: 13
+                                    lineNumber: 720,
+                                    columnNumber: 15
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/src/app/admin/whatsapp/conversations/components/ChatArea.tsx",
-                                lineNumber: 454,
+                                lineNumber: 707,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/app/admin/whatsapp/conversations/components/ChatArea.tsx",
-                        lineNumber: 425,
+                        lineNumber: 650,
                         columnNumber: 9
                     }, this),
                     conversation.instance.status !== 'CONNECTED' && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                        className: "mt-2 p-2 bg-yellow-50 border border-yellow-200 rounded text-sm text-yellow-700",
-                        children: "⚠️ Instância WhatsApp desconectada. Não é possível enviar mensagens."
+                        className: "mt-3 p-3 bg-yellow-50 border border-yellow-200 rounded-lg text-sm text-yellow-700 flex items-center space-x-2",
+                        children: [
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                className: "w-2 h-2 bg-yellow-500 rounded-full"
+                            }, void 0, false, {
+                                fileName: "[project]/src/app/admin/whatsapp/conversations/components/ChatArea.tsx",
+                                lineNumber: 728,
+                                columnNumber: 13
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                children: "Instância WhatsApp desconectada. Não é possível enviar mensagens."
+                            }, void 0, false, {
+                                fileName: "[project]/src/app/admin/whatsapp/conversations/components/ChatArea.tsx",
+                                lineNumber: 729,
+                                columnNumber: 13
+                            }, this)
+                        ]
+                    }, void 0, true, {
+                        fileName: "[project]/src/app/admin/whatsapp/conversations/components/ChatArea.tsx",
+                        lineNumber: 727,
+                        columnNumber: 11
+                    }, this),
+                    conversation.instance.status === 'CONNECTED' && messages.length === 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                        className: "mt-2 text-xs text-gray-500 text-center",
+                        children: "Pressione Enter para enviar ou Shift+Enter para nova linha"
                     }, void 0, false, {
                         fileName: "[project]/src/app/admin/whatsapp/conversations/components/ChatArea.tsx",
-                        lineNumber: 465,
+                        lineNumber: 735,
                         columnNumber: 11
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/src/app/admin/whatsapp/conversations/components/ChatArea.tsx",
-                lineNumber: 424,
+                lineNumber: 649,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/src/app/admin/whatsapp/conversations/components/ChatArea.tsx",
-        lineNumber: 324,
+        lineNumber: 549,
         columnNumber: 5
     }, this);
 }

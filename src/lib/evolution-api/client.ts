@@ -11,6 +11,7 @@ import {
   WebhookResponse,
   SendTextMessageRequest,
   SendMediaMessageRequest,
+  SendWhatsAppAudioRequest,
   SendLocationMessageRequest,
   SendMessageResponse,
   ContactsResponse,
@@ -49,6 +50,16 @@ export class EvolutionAPIClient {
     try {
       const url = `${this.baseUrl}${endpoint}`
       
+      console.log('🌐 Evolution API Request:', {
+        url,
+        method: options.method || 'GET',
+        hasBody: !!options.body,
+        headers: {
+          ...this.defaultHeaders,
+          ...options.headers
+        }
+      })
+      
       const controller = new AbortController()
       const timeoutId = setTimeout(() => controller.abort(), 10000)
       
@@ -62,7 +73,24 @@ export class EvolutionAPIClient {
       })
 
       clearTimeout(timeoutId)
-      const data = await response.json()
+      
+      let data: any
+      const contentType = response.headers.get('content-type')
+      
+      if (contentType && contentType.includes('application/json')) {
+        data = await response.json()
+      } else {
+        const textData = await response.text()
+        console.log('⚠️ Evolution API resposta não-JSON:', textData)
+        data = { message: textData }
+      }
+
+      console.log('📡 Evolution API Response:', {
+        status: response.status,
+        ok: response.ok,
+        contentType,
+        data: JSON.stringify(data).substring(0, 200) + (JSON.stringify(data).length > 200 ? '...' : '')
+      })
 
       if (!response.ok) {
         return {
@@ -80,7 +108,7 @@ export class EvolutionAPIClient {
         data
       }
     } catch (error) {
-      console.error('Evolution API Error:', error)
+      console.error('❌ Evolution API Error:', error)
       
       if (error instanceof Error && error.name === 'AbortError') {
         return {
@@ -225,20 +253,77 @@ export class EvolutionAPIClient {
   }
 
   /**
-   * Enviar mensagem de mídia (imagem, vídeo, áudio, documento)
+   * Enviar áudio WhatsApp (Evolution API v2.2.3+)
+   * Endpoint específico para áudio que aceita apenas base64
    */
-  async sendMediaMessage(instanceName: string, data: SendMediaMessageRequest): Promise<EvolutionAPIResponse<SendMessageResponse>> {
-    return this.makeRequest<SendMessageResponse>(`/message/sendMedia/${instanceName}`, {
+  async sendWhatsAppAudio(instanceName: string, data: SendWhatsAppAudioRequest): Promise<EvolutionAPIResponse<SendMessageResponse>> {
+    console.log('🎵 Evolution API - Enviando áudio via endpoint específico:', {
+      endpoint: `/message/sendWhatsAppAudio/${instanceName}`,
+      hasAudio: !!data.audio,
+      isBase64: data.audio.length > 0 && !data.audio.startsWith('http'),
+      audioLength: data.audio.length,
+      number: data.number
+    })
+
+    return this.makeRequest<SendMessageResponse>(`/message/sendWhatsAppAudio/${instanceName}`, {
       method: 'POST',
       body: JSON.stringify({
         number: data.number,
-        mediatype: data.mediatype,
-        media: data.media,
-        caption: data.caption,
-        fileName: data.fileName,
+        audio: data.audio,
         delay: data.delay,
         quoted: data.quoted
       })
+    })
+  }
+
+  /**
+   * Enviar mensagem de mídia (imagem, vídeo, áudio, documento)
+   */
+  async sendMediaMessage(instanceName: string, data: SendMediaMessageRequest): Promise<EvolutionAPIResponse<SendMessageResponse>> {
+    // Preparar payload sem campos vazios/undefined
+    const payload: any = {
+      number: data.number,
+      mediatype: data.mediatype,
+      media: data.media
+    }
+
+    // Adicionar mimetype se fornecido (especialmente para URLs)
+    if (data.mimetype && data.mimetype.trim()) {
+      payload.mimetype = data.mimetype.trim()
+    }
+
+    // Adicionar campos opcionais apenas se tiverem valor
+    if (data.caption && data.caption.trim()) {
+      payload.caption = data.caption.trim()
+    }
+
+    if (data.fileName && data.fileName.trim()) {
+      payload.fileName = data.fileName.trim()
+    }
+
+    if (data.delay) {
+      payload.delay = data.delay
+    }
+
+    if (data.quoted) {
+      payload.quoted = data.quoted
+    }
+
+    console.log('🔄 Evolution API - Enviando mídia com payload:', {
+      endpoint: `/message/sendMedia/${instanceName}`,
+      hasMedia: !!data.media,
+      mediaType: data.mediatype,
+      isUrl: data.media.startsWith('http'),
+      isBase64: data.media.startsWith('data:'),
+      hasMimeType: !!data.mimetype,
+      hasCaption: !!data.caption,
+      hasFileName: !!data.fileName,
+      payloadKeys: Object.keys(payload)
+    })
+
+    return this.makeRequest<SendMessageResponse>(`/message/sendMedia/${instanceName}`, {
+      method: 'POST',
+      body: JSON.stringify(payload)
     })
   }
 

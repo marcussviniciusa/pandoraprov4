@@ -270,32 +270,56 @@ export default function ConversationsPage() {
   }, [])
 
   // Enviar mensagem
-  const handleSendMessage = useCallback(async (content: string, conversationId: string) => {
+  const handleSendMessage = useCallback(async (
+    data: {
+      content?: string
+      messageType: 'text' | 'image' | 'video' | 'audio' | 'document'
+      mediaData?: string
+      fileName?: string
+      caption?: string
+    },
+    conversationId: string
+  ) => {
     if (!selectedConversation) return
 
     try {
+      const requestBody: any = {
+        phoneNumber: selectedConversation.contact.phoneNumber,
+        messageType: data.messageType
+      }
+
+      // Adicionar dados específicos do tipo de mensagem
+      if (data.messageType === 'text') {
+        requestBody.message = data.content
+      } else {
+        requestBody.mediaData = data.mediaData
+        requestBody.fileName = data.fileName
+        requestBody.caption = data.caption
+        if (data.content) {
+          requestBody.message = data.content
+        }
+      }
+
       const response = await fetch(`/api/whatsapp/instances/${selectedConversation.instance.id}/send-message`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          phoneNumber: selectedConversation.contact.phoneNumber,
-          message: content,
-          messageType: 'text'
-        })
+        body: JSON.stringify(requestBody)
       })
 
       if (response.ok) {
-        const data = await response.json()
+        const responseData = await response.json()
         
         // Criar mensagem local para adicionar à lista imediatamente
         const newMessage: WhatsAppMessage = {
-          id: data.messageId || `temp-${Date.now()}`,
-          content,
-          messageType: 'TEXT',
+          id: responseData.messageId || `temp-${Date.now()}`,
+          content: data.content || data.caption || data.fileName || 'Mídia enviada',
+          messageType: data.messageType.toUpperCase() as any,
           fromMe: true,
           timestamp: new Date().toISOString(),
           status: 'SENT',
-          contact: selectedConversation.contact
+          contact: selectedConversation.contact,
+          mediaUrl: data.messageType !== 'text' ? data.mediaData : undefined,
+          fileName: data.fileName
         }
         
         // Adicionar mensagem à lista local e ao cache
@@ -314,8 +338,8 @@ export default function ConversationsPage() {
                 lastMessageAt: new Date().toISOString(),
                 lastMessage: {
                   id: newMessage.id,
-                  content,
-                  messageType: 'TEXT',
+                  content: newMessage.content,
+                  messageType: newMessage.messageType,
                   fromMe: true,
                   timestamp: new Date().toISOString(),
                   status: 'SENT'
@@ -326,13 +350,15 @@ export default function ConversationsPage() {
         
         toast({
           title: 'Mensagem enviada',
-          description: 'Sua mensagem foi enviada com sucesso'
+          description: data.messageType === 'text' 
+            ? 'Sua mensagem foi enviada com sucesso'
+            : 'Seu arquivo foi enviado com sucesso'
         })
       } else {
-        const data = await response.json()
+        const errorData = await response.json()
         toast({
           title: 'Erro ao enviar',
-          description: data.error || 'Erro ao enviar mensagem',
+          description: errorData.error || 'Erro ao enviar mensagem',
           variant: 'destructive'
         })
       }
